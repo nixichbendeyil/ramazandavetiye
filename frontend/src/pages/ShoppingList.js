@@ -13,7 +13,7 @@ import { Plus, ShoppingCart, Trash2, Apple, Beef, Milk, Wheat, Salad, Coffee, Pa
 
 const ShoppingList = () => {
   const { t } = useTranslation();
-  const { shoppingItems, addShoppingItem, deleteShoppingItem, toggleShoppingItem, clearCompletedItems } = useApp();
+  const { language, shoppingItems, addShoppingItem, deleteShoppingItem, toggleShoppingItem, clearCompletedItems } = useApp();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newItem, setNewItem] = useState({
     name: '',

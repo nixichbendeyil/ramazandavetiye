@@ -150,7 +150,7 @@ const ShoppingList = () => {
 
               <Button 
                 onClick={handleBulkAdd} 
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                className="w-full bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-full"
                 disabled={!bulkItems.trim()}
                 data-testid="save-bulk-items-btn"
               >

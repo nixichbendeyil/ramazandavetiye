@@ -1,149 +1,91 @@
 {
-  "design_system": {
-    "identity": {
-      "name": "Fastenmonat Kalender",
-      "tone": "Spiritual, Modern, Organized, Warm, Disciplined",
-      "visual_mood": "Clean Geometric Islamic, Breathable Space, Organic Textures",
-      "theme_strategy": "Light Mode Default (Paper/Sand vibes) with Dark Mode Toggle (Deep Midnight)"
+  "project_name": "Ramadan Guest & Calendar App",
+  "theme": {
+    "name": "Spiritual Warmth",
+    "mode": "light",
+    "colors": {
+      "background": "#FDFBF7",
+      "foreground": "#1F2937",
+      "primary": "#047857",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#D97706",
+      "secondary_foreground": "#FFFFFF",
+      "accent": "#FCD34D",
+      "muted": "#F5F5F4",
+      "border": "#E5E7EB",
+      "card": "#FFFFFF",
+      "hosting": "#047857",
+      "invited": "#D97706"
     },
     "typography": {
-      "font_family": {
-        "headings": "Playfair Display, serif",
-        "body": "Inter, sans-serif",
-        "mono": "JetBrains Mono, monospace"
+      "headings": {
+        "font_family": "Playfair Display, serif",
+        "weights": ["600", "700"]
       },
-      "scale": {
-        "h1": "text-4xl md:text-5xl font-bold tracking-tight leading-tight",
-        "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
-        "h3": "text-2xl font-medium tracking-normal",
-        "body_lg": "text-lg leading-relaxed",
-        "body_base": "text-base leading-relaxed text-stone-600 dark:text-stone-300",
-        "caption": "text-sm text-stone-500 uppercase tracking-widest"
-      },
-      "usage_rules": {
-        "headings": "Use Playfair Display for all Page Titles, Prayer Names, and 'Iftar' callouts.",
-        "body": "Use Inter for all UI elements, inputs, lists, and calendar grids.",
-        "numbers": "Use Tabular nums (tabular-nums) for prayer times and countdowns to prevent jitter."
+      "body": {
+        "font_family": "Outfit, sans-serif",
+        "weights": ["300", "400", "500"]
       }
     },
-    "colors": {
-      "palette": {
-        "primary": {
-          "DEFAULT": "#047857",
-          "foreground": "#ffffff",
-          "description": "Deep Emerald - Spiritual, Nature, Paradise"
-        },
-        "secondary": {
-          "DEFAULT": "#b45309",
-          "foreground": "#ffffff",
-          "description": "Golden Ochre - Dates, Sunset, Warmth"
-        },
-        "background": {
-          "light": "#fdfbf7",
-          "dark": "#0c0a09",
-          "description": "Warm Sand (Light) / Deep Obsidian (Dark)"
-        },
-        "surface": {
-          "light": "#ffffff",
-          "dark": "#1c1917",
-          "description": "Clean White / Warm Dark Grey"
-        },
-        "accent": {
-          "DEFAULT": "#10b981",
-          "foreground": "#ffffff",
-          "description": "Vibrant Green for Success/Active states"
-        },
-        "muted": {
-          "DEFAULT": "#f5f5f4",
-          "foreground": "#78716c"
-        },
-        "border": "#e7e5e4"
-      },
-      "gradients": {
-        "hero_overlay": "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%)",
-        "gold_glow": "radial-gradient(circle at center, rgba(217, 119, 6, 0.15) 0%, transparent 70%)"
-      }
-    },
-    "layout": {
-      "spacing_scale": "Tailwind Scale (p-4, p-6, p-8, p-12)",
-      "container": "max-w-md mx-auto md:max-w-2xl lg:max-w-4xl xl:max-w-6xl px-4 md:px-8",
-      "grid_system": {
-        "dashboard": "grid grid-cols-1 md:grid-cols-12 gap-6",
-        "calendar": "grid grid-cols-7 gap-1"
-      },
-      "radius": {
-        "default": "rounded-xl",
-        "button": "rounded-full",
-        "card": "rounded-2xl"
-      }
-    },
-    "components": {
-      "buttons": {
-        "primary": "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all active:scale-95 rounded-full px-8 py-6 font-medium",
-        "secondary": "bg-white text-stone-900 border border-stone-200 shadow-sm hover:bg-stone-50 transition-all rounded-full px-6 py-4",
-        "ghost": "hover:bg-stone-100 text-stone-600 hover:text-stone-900 rounded-lg px-4"
-      },
-      "cards": {
-        "base": "bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-shadow duration-300",
-        "prayer_card": "relative overflow-hidden bg-white border border-stone-100 p-6 flex items-center justify-between group"
-      },
-      "inputs": {
-        "default": "bg-stone-50 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all rounded-xl h-12 px-4"
-      },
-      "navigation": {
-        "bottom_bar": "fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-stone-100 p-4 flex justify-around z-50 md:hidden",
-        "desktop_sidebar": "hidden md:flex flex-col w-64 border-r border-stone-100 h-screen sticky top-0 p-6"
-      }
-    },
-    "motion": {
-      "library": "framer-motion",
-      "transitions": {
-        "page_enter": {
-          "initial": { "opacity": 0, "y": 10 },
-          "animate": { "opacity": 1, "y": 0 },
-          "exit": { "opacity": 0, "y": -10 },
-          "transition": { "duration": 0.3, "ease": "easeOut" }
-        },
-        "stagger": {
-          "container": { "staggerChildren": 0.05 }
-        }
-      }
-    },
-    "assets": {
-      "icons": {
-        "library": "lucide-react",
-        "style": "stroke-width={1.5} className='text-stone-600'"
-      },
-      "images": {
-        "hero_bg": "https://images.unsplash.com/photo-1759888107439-2b62433ef18b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwzfHxibHVlJTIwbW9zcXVlJTIwaXN0YW5idWwlMjBzdW5zZXQlMjBzaWxob3VldHRlfGVufDB8fHx8MTc3MTIyMDE3MHww&ixlib=rb-4.1.0&q=85",
-        "lantern_decor": "https://images.unsplash.com/photo-1648981184742-44b3c0d73210?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHwyfHxyYW1hZGFuJTIwbGFudGVybiUyMGRhdGVzJTIwZGVjb3JhdGlvbnxlbnwwfHx8fDE3NzEyMjAxNjV8MA&ixlib=rb-4.1.0&q=85",
-        "recipe_lentil": "https://images.unsplash.com/photo-1625937712842-061738bb1e2a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHw0fHx0dXJraXNoJTIwbGVudGlsJTIwc291cCUyMGJvd2x8ZW58MHx8fHwxNzcxMjIwMTY3fDA&ixlib=rb-4.1.0&q=85",
-        "recipe_baklava": "https://images.unsplash.com/photo-1761828122856-8703baac8e86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA8Mzl8MHwxfHNlYXJjaHwyfHxiYWtsYXZhJTIwZGVzc2VydCUyMHBpc3RhY2hpb3xlbnwwfHx8fDE3NzEyMjAxNjd8MA&ixlib=rb-4.1.0&q=85"
-      }
+    "radius": "0.75rem",
+    "spacing": {
+      "container_padding": "p-4 md:p-6",
+      "section_gap": "gap-6"
     }
   },
-  "implementation_guide": {
-    "phases": [
-      "1. Setup Shadcn UI and Tailwind Config with custom colors.",
-      "2. Build the 'PrayerTimeContext' to fetch data from Aladhan API.",
-      "3. Create the 'Dashboard' with Countdown Timer (use date-fns).",
-      "4. Build 'Calendar' view with 'react-day-picker' (Shadcn Calendar).",
-      "5. Implement 'Recipe' and 'Shopping List' using LocalStorage.",
-      "6. Add 'Settings' for City Selection and Language Toggle (i18next)."
-    ],
-    "universal_rules": [
-      "No generic gradients. Use solid colors or subtle radial glows.",
-      "Always use 'Playfair Display' for headers to give the 'Ramadan Journal' feel.",
-      "Ensure text contrast is high (Stone-900 on White).",
-      "Use 'sonner' for all success/error toasts.",
-      "All interactive elements must have 'data-testid'.",
-      "Use 'lucide-react' for icons."
-    ],
-    "tech_stack": {
-      "frontend": "React, Tailwind CSS, Shadcn UI",
-      "state_management": "React Context + LocalStorage",
-      "api": "Aladhan Prayer Times API (http://api.aladhan.com/v1/timingsByCity)",
-      "i18n": "react-i18next (DE/TR)"
+  "visual_enhancers": {
+    "gradients": {
+      "hero": "linear-gradient(135deg, #047857 0%, #064E3B 100%)",
+      "gold_accent": "linear-gradient(135deg, #FCD34D 0%, #D97706 100%)"
+    },
+    "shadows": {
+      "soft": "0 4px 20px -2px rgba(4, 120, 87, 0.08)",
+      "card": "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)"
+    },
+    "patterns": "Use subtle Islamic geometric patterns as background overlays with 5% opacity"
+  },
+  "layout_strategy": {
+    "mobile_first": true,
+    "navigation": "Bottom Navigation Bar (Dashboard, Calendar, Shopping, Settings)",
+    "container_max_width": "max-w-md mx-auto md:max-w-lg",
+    "calendar_view": {
+      "month": "Grid with Green/Gold dot indicators",
+      "week": "Horizontal Date Strip (Top) + Vertical Agenda List (Bottom) - NO BIG TILES"
     }
+  },
+  "components": {
+    "buttons": {
+      "style": "pill",
+      "animation": "transform transition-transform active:scale-95"
+    },
+    "cards": {
+      "style": "flat",
+      "border": "1px solid #E5E7EB",
+      "radius": "rounded-xl"
+    },
+    "inputs": {
+      "style": "minimal",
+      "focus": "ring-2 ring-emerald-500 ring-offset-2"
+    }
+  },
+  "image_urls": {
+    "hero_bg": "https://images.unsplash.com/photo-1759888107439-2b62433ef18b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxiZWF1dGlmdWwlMjBtb3NxdWUlMjBzaWxob3VldHRlJTIwc3Vuc2V0fGVufDB8fHx8MTc3MTIyMTcxN3ww&ixlib=rb-4.1.0&q=85",
+    "lantern_pattern": "https://images.unsplash.com/photo-1765878108610-1797ff4d5fef?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxyYW1hZGFuJTIwbGFudGVybiUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3NzEyMjE3MTB8MA&ixlib=rb-4.1.0&q=85",
+    "geometric_pattern": "https://images.unsplash.com/photo-1739478469686-b4aab237a38e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwzfHxpc2xhbWljJTIwZ2VvbWV0cmljJTIwcGF0dGVybiUyMGdvbGQlMjBncmVlbnxlbnwwfHx8fDE3NzEyMjE3MDl8MA&ixlib=rb-4.1.0&q=85"
+  },
+  "instructions_to_main_agent": [
+    "Install 'Outfit' font family if possible or use Google Fonts import.",
+    "Refactor 'Week View' to use a Vertical Agenda Layout. DO NOT use grid tiles for week view.",
+    "Implement 'Bulk Add' in Shopping List using a textarea that splits by newline.",
+    "Use 'react-day-picker' modifiers to show colored dots for events in Month View.",
+    "Ensure 'Green' (#047857) is strictly for HOSTING events.",
+    "Ensure 'Gold' (#D97706) is strictly for INVITED events.",
+    "Use 'Vaul' drawer for adding events/items on mobile.",
+    "Maintain the 'Warm Sand' background to avoid harsh white glare."
+  ],
+  "UNIVERSAL_GUIDELINES": {
+    "design_philosophy": "Functional Spirituality. Clean, legible, but warm.",
+    "motion": "Use subtle fade-ins (framer-motion) for page transitions. No bounce or excessive spring.",
+    "accessibility": "Ensure text contrast on Gold backgrounds is sufficient (use dark text on gold if needed)."
   }
 }

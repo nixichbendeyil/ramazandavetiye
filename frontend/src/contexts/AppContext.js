@@ -247,6 +247,7 @@ export const AppProvider = ({ children }) => {
     // Prayer times
     prayerTimes,
     prayerTimesLoading,
+    prayerTimesTimezone,
     fetchPrayerTimes,
     // Events
     events,

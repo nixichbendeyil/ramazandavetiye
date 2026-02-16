@@ -563,20 +563,24 @@ const CalendarPage = () => {
                                 {event.address || event.location}
                               </p>
                             )}
-                            {/* Guest count for hosting events */}
-                            {event.type === 'hosting' && event.guests && event.guests.length > 0 && (
-                              <div className="flex items-center gap-2 mt-2">
-                                <div className="flex items-center gap-1 text-xs bg-[#115E59]/10 text-[#115E59] px-2 py-1 rounded-full">
+                            {/* Guest/Companion count for all events */}
+                            {event.guests && event.guests.length > 0 && (
+                              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                                <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                                  event.type === 'hosting' 
+                                    ? 'bg-[#115E59]/10 text-[#115E59]' 
+                                    : 'bg-[#92400E]/10 text-[#92400E]'
+                                }`}>
                                   <Users className="w-3 h-3" />
-                                  <span>{event.guests.length} {t('calendar.guestCount')}</span>
+                                  <span>{event.guests.length} {event.type === 'hosting' ? t('calendar.guestCount') : t('calendar.companions')}</span>
                                 </div>
-                                {event.guests.filter(g => g.status === 'accepted').length > 0 && (
+                                {event.type === 'hosting' && event.guests.filter(g => g.status === 'accepted').length > 0 && (
                                   <div className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                                     <UserCheck className="w-3 h-3" />
                                     <span>{event.guests.filter(g => g.status === 'accepted').length}</span>
                                   </div>
                                 )}
-                                {event.guests.filter(g => g.status === 'declined').length > 0 && (
+                                {event.type === 'hosting' && event.guests.filter(g => g.status === 'declined').length > 0 && (
                                   <div className="flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
                                     <UserX className="w-3 h-3" />
                                     <span>{event.guests.filter(g => g.status === 'declined').length}</span>

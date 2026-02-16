@@ -56,7 +56,7 @@ function App() {
       <BrowserRouter>
         <div className="min-h-screen bg-warm-sand">
           <Navigation />
-          <main className="pt-4 pb-20 md:pt-20 md:pb-4 px-4 max-w-6xl mx-auto">
+          <main className="pt-4 pb-20 md:pt-20 md:pb-4 px-4 max-w-md mx-auto md:max-w-lg">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />

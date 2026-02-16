@@ -131,9 +131,9 @@ export const AppProvider = ({ children }) => {
       // Determine timezone based on country
       const timezone = selectedCountry === 'Germany' ? 'Europe/Berlin' : 'Europe/Istanbul';
       
-      // Method 3 = Muslim World League (good for Europe)
-      // Method 13 = Diyanet (Turkey's official calculation)
-      const method = selectedCountry === 'Germany' ? 3 : 13;
+      // Use Diyanet method (13) for both countries - most trusted source for Muslims
+      // Diyanet calculates prayer times for all cities worldwide
+      const method = 13;
       
       const response = await fetch(
         `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}?city=${encodeURIComponent(selectedCity)}&country=${selectedCountry}&method=${method}&timezonestring=${timezone}`

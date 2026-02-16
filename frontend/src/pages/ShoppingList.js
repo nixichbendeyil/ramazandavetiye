@@ -90,7 +90,7 @@ const ShoppingList = () => {
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-700" data-testid="add-items-btn">
+            <Button className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-full" data-testid="add-items-btn">
               <Plus className="w-4 h-4 mr-1" />
               {t('shopping.addItem')}
             </Button>

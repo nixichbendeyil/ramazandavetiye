@@ -408,6 +408,13 @@ const CalendarPage = () => {
                   <p className="text-stone-400 text-center py-8 text-sm">{t('calendar.noEvents')}</p>
                 ) : (
                   <div className="space-y-3">
+                    {/* Share copied message */}
+                    {shareMessage && (
+                      <div className="bg-green-100 text-green-800 px-4 py-2 rounded-xl text-sm flex items-center gap-2">
+                        <Check className="w-4 h-4" />
+                        {shareMessage}
+                      </div>
+                    )}
                     {selectedDateEvents.map((event) => (
                       <div
                         key={event.id}
@@ -433,21 +440,37 @@ const CalendarPage = () => {
                               <Users className="w-4 h-4 flex-shrink-0" />
                               <span className="truncate">{event.name}</span>
                             </h4>
-                            {event.location && (
+                            {event.time && (
+                              <p className={`text-xs flex items-center gap-1 mt-1 ${
+                                event.type === 'hosting' ? 'text-[#115E59]/70' : 'text-[#92400E]/70'
+                              }`}>
+                                <Clock className="w-3 h-3" />
+                                {event.time} Uhr
+                              </p>
+                            )}
+                            {(event.address || event.location) && (
                               <p className={`text-xs flex items-center gap-1 mt-1 ${
                                 event.type === 'hosting' ? 'text-[#115E59]/70' : 'text-[#92400E]/70'
                               }`}>
                                 <MapPin className="w-3 h-3" />
-                                {event.location}
+                                {event.address || event.location}
                               </p>
                             )}
                           </div>
-                          <button
-                            onClick={() => openEditDialog(event)}
-                            className="p-2 hover:bg-white/50 rounded-lg transition-colors"
-                            data-testid={`edit-event-${event.id}`}
-                          >
-                            <Edit2 className="w-4 h-4 text-stone-400" />
+                          <div className="flex flex-col gap-1">
+                            <button
+                              onClick={() => handleShareEvent(event)}
+                              className="p-2 hover:bg-white/50 rounded-lg transition-colors"
+                              data-testid={`share-event-${event.id}`}
+                            >
+                              <Share2 className="w-4 h-4 text-[#0F4C5C]" />
+                            </button>
+                            <button
+                              onClick={() => openEditDialog(event)}
+                              className="p-2 hover:bg-white/50 rounded-lg transition-colors"
+                              data-testid={`edit-event-${event.id}`}
+                            >
+                              <Edit2 className="w-4 h-4 text-stone-400" />
                           </button>
                         </div>
                       </div>

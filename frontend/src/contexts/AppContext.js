@@ -118,7 +118,7 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
   }, [shoppingItems]);
 
-  // Fetch prayer times from Aladhan API
+  // Fetch prayer times from Aladhan API with correct timezone
   const fetchPrayerTimes = useCallback(async () => {
     setPrayerTimesLoading(true);
     try {
@@ -127,13 +127,22 @@ export const AppProvider = ({ children }) => {
       const month = today.getMonth() + 1;
       const year = today.getFullYear();
       
+      // Determine timezone based on country
+      const timezone = selectedCountry === 'Germany' ? 'Europe/Berlin' : 'Europe/Istanbul';
+      
+      // Method 3 = Muslim World League (good for Europe)
+      // Method 13 = Diyanet (Turkey's official calculation)
+      const method = selectedCountry === 'Germany' ? 3 : 13;
+      
       const response = await fetch(
-        `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}?city=${selectedCity}&country=${selectedCountry}&method=3`
+        `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}?city=${encodeURIComponent(selectedCity)}&country=${selectedCountry}&method=${method}&timezonestring=${timezone}`
       );
       const data = await response.json();
       
       if (data.code === 200) {
         setPrayerTimes(data.data.timings);
+        // Store timezone info for countdown calculations
+        setPrayerTimesTimezone(timezone);
       }
     } catch (error) {
       console.error('Error fetching prayer times:', error);

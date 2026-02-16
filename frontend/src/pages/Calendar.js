@@ -953,35 +953,6 @@ const CalendarPage = () => {
                 )}
               </div>
               <div>
-                              title={t('calendar.accepted')}
-                            >
-                              <UserCheck className={`w-3.5 h-3.5 ${guest.status === 'accepted' ? 'text-green-600' : 'text-stone-400'}`} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateGuestStatus(guest.id, 'declined')}
-                              className={`p-1.5 rounded-md transition-colors ${guest.status === 'declined' ? 'bg-red-100' : 'hover:bg-stone-100'}`}
-                              title={t('calendar.declined')}
-                            >
-                              <UserX className={`w-3.5 h-3.5 ${guest.status === 'declined' ? 'text-red-600' : 'text-stone-400'}`} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => removeGuestFromEditingEvent(guest.id)}
-                              className="p-1.5 hover:bg-red-50 rounded-md transition-colors ml-1"
-                            >
-                              <X className="w-3.5 h-3.5 text-stone-400 hover:text-red-500" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-stone-400 mt-2">{t('calendar.noGuests')}</p>
-                  )}
-                </div>
-              )}
-              <div>
                 <Label className="text-stone-600">{t('calendar.notes')}</Label>
                 <Textarea
                   value={editingEvent.notes}

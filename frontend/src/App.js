@@ -1,53 +1,75 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React from 'react';
+import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { AppProvider } from './contexts/AppContext';
+import { Toaster } from './components/ui/sonner';
+import Dashboard from './pages/Dashboard';
+import CalendarPage from './pages/Calendar';
+import ShoppingList from './pages/ShoppingList';
+import Recipes from './pages/Recipes';
+import Settings from './pages/Settings';
+import { Home, Calendar, ShoppingCart, ChefHat, Settings as SettingsIcon } from 'lucide-react';
+import './i18n/i18n';
+import './App.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const Navigation = () => {
+  const { t } = useTranslation();
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const navItems = [
+    { path: '/dashboard', icon: Home, label: t('nav.dashboard') },
+    { path: '/calendar', icon: Calendar, label: t('nav.calendar') },
+    { path: '/shopping', icon: ShoppingCart, label: t('nav.shopping') },
+    { path: '/recipes', icon: ChefHat, label: t('nav.recipes') },
+    { path: '/settings', icon: SettingsIcon, label: t('nav.settings') }
+  ];
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-200 z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b" data-testid="main-navigation">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex justify-around py-2 md:py-3">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${
+                  isActive
+                    ? 'text-emerald-600 bg-emerald-50'
+                    : 'text-stone-500 hover:text-stone-800 hover:bg-stone-50'
+                }`
+              }
+              data-testid={`nav-${item.path.substring(1)}`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-xs font-medium">{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 };
 
 function App() {
   return (
-    <div className="App">
+    <AppProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
+        <div className="min-h-screen bg-warm-sand">
+          <Navigation />
+          <main className="pt-4 pb-20 md:pt-20 md:pb-4 px-4 max-w-2xl mx-auto">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/shopping" element={<ShoppingList />} />
+              <Route path="/recipes" element={<Recipes />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </main>
+          <Toaster position="top-center" richColors />
+        </div>
       </BrowserRouter>
-    </div>
+    </AppProvider>
   );
 }
 

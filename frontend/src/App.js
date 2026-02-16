@@ -24,23 +24,23 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-200 z-[100] safe-area-bottom" data-testid="main-navigation">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-stone-100 z-[100] shadow-[0_-4px_20px_rgba(0,0,0,0.02)]" data-testid="main-navigation">
       <div className="max-w-md mx-auto md:max-w-lg relative">
-        <div className="flex justify-around py-2 md:py-3">
+        <div className="flex justify-around py-2">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${
+                `flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors ${
                   isActive
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-stone-500 hover:text-stone-800 hover:bg-stone-50'
+                    ? 'text-[#0F4C5C]'
+                    : 'text-stone-400 hover:text-stone-600'
                 }`
               }
               data-testid={`nav-${item.path.substring(1)}`}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className="w-5 h-5" strokeWidth={1.75} />
               <span className="text-xs font-medium">{item.label}</span>
             </NavLink>
           ))}

@@ -159,6 +159,64 @@ const CalendarPage = () => {
     }
   };
 
+  // Guest management functions
+  const addGuestToNewEvent = () => {
+    if (!newGuestName.trim()) return;
+    setNewEvent(prev => ({
+      ...prev,
+      guests: [...(prev.guests || []), { id: Date.now().toString(), name: newGuestName.trim(), status: 'pending' }]
+    }));
+    setNewGuestName('');
+  };
+
+  const removeGuestFromNewEvent = (guestId) => {
+    setNewEvent(prev => ({
+      ...prev,
+      guests: (prev.guests || []).filter(g => g.id !== guestId)
+    }));
+  };
+
+  const addGuestToEditingEvent = () => {
+    if (!newGuestName.trim() || !editingEvent) return;
+    setEditingEvent(prev => ({
+      ...prev,
+      guests: [...(prev.guests || []), { id: Date.now().toString(), name: newGuestName.trim(), status: 'pending' }]
+    }));
+    setNewGuestName('');
+  };
+
+  const removeGuestFromEditingEvent = (guestId) => {
+    if (!editingEvent) return;
+    setEditingEvent(prev => ({
+      ...prev,
+      guests: (prev.guests || []).filter(g => g.id !== guestId)
+    }));
+  };
+
+  const updateGuestStatus = (guestId, status) => {
+    if (!editingEvent) return;
+    setEditingEvent(prev => ({
+      ...prev,
+      guests: (prev.guests || []).map(g => g.id === guestId ? { ...g, status } : g)
+    }));
+  };
+
+  const getGuestStatusColor = (status) => {
+    switch (status) {
+      case 'accepted': return 'bg-green-100 text-green-700 border-green-200';
+      case 'declined': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-stone-100 text-stone-600 border-stone-200';
+    }
+  };
+
+  const getGuestStatusIcon = (status) => {
+    switch (status) {
+      case 'accepted': return <UserCheck className="w-3 h-3" />;
+      case 'declined': return <UserX className="w-3 h-3" />;
+      default: return <Users className="w-3 h-3" />;
+    }
+  };
+
   const navigateMonth = (direction) => {
     setCurrentMonth(prev => direction === 'next' ? addMonths(prev, 1) : subMonths(prev, 1));
   };

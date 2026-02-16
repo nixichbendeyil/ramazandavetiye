@@ -6,31 +6,33 @@
 
 @layer base {
   :root {
-    /* Spiritual Warmth Theme */
-    --background: 40 33% 98%;
-    --foreground: 220 13% 18%;
+    /* Modern Heritage Theme - Premium Color Palette */
+    --background: 30 5% 98%;
+    --foreground: 24 10% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 220 13% 18%;
+    --card-foreground: 24 10% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 18%;
-    --primary: 160 90% 18%;
+    --popover-foreground: 24 10% 10%;
+    
+    /* Brand Colors - Sophisticated Teal */
+    --primary: 191 71% 21%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 32 95% 44%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 30 20% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 45 93% 64%;
-    --accent-foreground: 220 13% 18%;
+    --secondary: 37 40% 63%;
+    --secondary-foreground: 24 10% 10%;
+    
+    /* Neutrals */
+    --muted: 30 6% 96%;
+    --muted-foreground: 24 6% 45%;
+    --accent: 30 6% 96%;
+    --accent-foreground: 24 10% 10%;
+    
+    /* Status Colors */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
-    --ring: 160 90% 18%;
-    --radius: 0.75rem;
-    
-    /* Custom Colors */
-    --hosting: 160 90% 18%;
-    --invited: 32 95% 44%;
+    --border: 30 6% 90%;
+    --input: 30 6% 90%;
+    --ring: 191 71% 21%;
+    --radius: 1rem;
   }
 }
 
@@ -39,8 +41,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: 'Outfit', sans-serif;
+    background-color: #FAFAF9;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -57,33 +60,52 @@
   .font-outfit {
     font-family: 'Outfit', sans-serif;
   }
-  .bg-warm-sand {
-    background-color: #FDFBF7;
+  
+  /* Brand Colors */
+  .bg-brand {
+    background-color: #0F4C5C;
   }
+  .text-brand {
+    color: #0F4C5C;
+  }
+  .border-brand {
+    border-color: #0F4C5C;
+  }
+  
+  /* Host (Besuch) - Deep Teal */
+  .bg-host {
+    background-color: #F0FDFA;
+  }
+  .bg-host-solid {
+    background-color: #0F766E;
+  }
+  .text-host {
+    color: #115E59;
+  }
+  .border-host {
+    border-color: #CCFBF1;
+  }
+  
+  /* Guest (Einladung) - Warm Gold */
+  .bg-guest {
+    background-color: #FFFBEB;
+  }
+  .bg-guest-solid {
+    background-color: #B45309;
+  }
+  .text-guest {
+    color: #92400E;
+  }
+  .border-guest {
+    border-color: #FEF3C7;
+  }
+  
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
-  .bg-hosting {
-    background-color: #047857;
-  }
-  .bg-invited {
-    background-color: #D97706;
-  }
-  .text-hosting {
-    color: #047857;
-  }
-  .text-invited {
-    color: #D97706;
-  }
-  .border-hosting {
-    border-color: #047857;
-  }
-  .border-invited {
-    border-color: #D97706;
-  }
 }
 
-/* Custom scrollbar */
+/* Elegant Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -94,18 +116,31 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
+  background: #D6D3D1;
   border-radius: 2px;
 }
 
-/* Mobile-first touch optimizations */
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A29E;
+}
+
+/* Touch optimizations */
 button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Bottom nav safe area */
+/* Safe area padding */
 .pb-safe {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Premium Card Shadow */
+.shadow-premium {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-premium-hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
 /* Debug wrapper styles */
@@ -115,20 +150,13 @@ button, a {
   }
 }
 
-/* Event color coding */
-.event-hosting {
-  @apply bg-emerald-100 border-l-4 border-emerald-600;
-}
-
-.event-invited {
-  @apply bg-amber-100 border-l-4 border-amber-500;
-}
-
 /* Dot indicators for calendar */
-.dot-hosting {
-  @apply w-2 h-2 rounded-full bg-emerald-600;
+.dot-host {
+  @apply w-2 h-2 rounded-full;
+  background-color: #0F766E;
 }
 
-.dot-invited {
-  @apply w-2 h-2 rounded-full bg-amber-500;
+.dot-guest {
+  @apply w-2 h-2 rounded-full;
+  background-color: #B45309;
 }

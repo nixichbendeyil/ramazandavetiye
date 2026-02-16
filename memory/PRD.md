@@ -52,6 +52,7 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - ✅ Namen direkt im Kalender anzeigen
 - ✅ Uhrzeit und Adresse für Events
 - ✅ **Teilen-Funktion** (Web Share API für Mobile, Clipboard für Desktop)
+- ✅ **Gästeliste** pro Event mit Zu-/Absagen-Status (pending/accepted/declined)
 
 ### Einkaufsliste
 - ✅ Artikel hinzufügen mit Kategorie
@@ -83,6 +84,7 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - [x] Stadtauswahl
 - [x] PWA-Unterstützung (installierbar auf Handy)
 - [x] Teilen-Funktion für Einladungen (WhatsApp, SMS, etc.)
+- [x] Gästeliste mit Zu-/Absagen-Verwaltung
 
 ## P1 Features (Backlog)
 - [ ] Menüplaner direkt mit Terminen verknüpfen

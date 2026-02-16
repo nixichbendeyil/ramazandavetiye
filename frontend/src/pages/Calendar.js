@@ -809,12 +809,12 @@ const CalendarPage = () => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="rounded-2xl" data-testid="edit-event-dialog">
+        <DialogContent className="rounded-2xl max-h-[85vh] overflow-y-auto" data-testid="edit-event-dialog">
           <DialogHeader>
             <DialogTitle className="font-playfair text-xl">{t('calendar.edit')}</DialogTitle>
           </DialogHeader>
           {editingEvent && (
-            <div className="space-y-4 pt-4">
+            <div className="space-y-4 pt-4 pb-4">
               <div>
                 <Label className="text-stone-600">{t('calendar.guestName')}</Label>
                 <Input

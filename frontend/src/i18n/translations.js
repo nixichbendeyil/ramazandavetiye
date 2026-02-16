@@ -43,12 +43,22 @@ export const translations = {
         guestName: 'Name',
         eventType: 'Art',
         location: 'Ort',
+        address: 'Adresse',
+        time: 'Uhrzeit',
         notes: 'Notizen',
         menu: 'Menü',
         delete: 'Löschen',
         save: 'Speichern',
         cancel: 'Abbrechen',
-        edit: 'Bearbeiten'
+        edit: 'Bearbeiten',
+        share: 'Teilen',
+        shareTitle: 'Iftar Einladung',
+        shareInviteText: 'Du bist herzlich zum Iftar eingeladen!',
+        shareHostText: 'Wir freuen uns auf deinen Besuch zum Iftar!',
+        shareDate: 'Datum',
+        shareTime: 'Uhrzeit',
+        shareAddress: 'Adresse',
+        shareCopied: 'In Zwischenablage kopiert!'
       },
       // Shopping List
       shopping: {
@@ -159,12 +169,22 @@ export const translations = {
         guestName: 'Isim',
         eventType: 'Tur',
         location: 'Konum',
+        address: 'Adres',
+        time: 'Saat',
         notes: 'Notlar',
         menu: 'Menu',
         delete: 'Sil',
         save: 'Kaydet',
         cancel: 'Iptal',
-        edit: 'Duzenle'
+        edit: 'Duzenle',
+        share: 'Paylas',
+        shareTitle: 'Iftar Daveti',
+        shareInviteText: 'Iftara davetlisiniz!',
+        shareHostText: 'Iftarda sizi bekliyoruz!',
+        shareDate: 'Tarih',
+        shareTime: 'Saat',
+        shareAddress: 'Adres',
+        shareCopied: 'Panoya kopyalandi!'
       },
       // Shopping List
       shopping: {

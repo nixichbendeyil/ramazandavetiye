@@ -572,12 +572,32 @@ const CalendarPage = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-stone-600">{t('calendar.time')}</Label>
+                      <Input
+                        type="time"
+                        value={newEvent.time}
+                        onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                        className="mt-1.5 rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-stone-600">{t('calendar.location')}</Label>
+                      <Input
+                        value={newEvent.location}
+                        onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                        placeholder={t('calendar.location')}
+                        className="mt-1.5 rounded-xl"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <Label className="text-stone-600">{t('calendar.location')}</Label>
+                    <Label className="text-stone-600">{t('calendar.address')}</Label>
                     <Input
-                      value={newEvent.location}
-                      onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                      placeholder={t('calendar.location')}
+                      value={newEvent.address}
+                      onChange={(e) => setNewEvent({ ...newEvent, address: e.target.value })}
+                      placeholder="z.B. Musterstraße 123, 12345 Berlin"
                       className="mt-1.5 rounded-xl"
                     />
                   </div>

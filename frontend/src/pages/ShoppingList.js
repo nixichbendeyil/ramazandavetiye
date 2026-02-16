@@ -19,13 +19,13 @@ const ShoppingList = () => {
   const [selectedCategory, setSelectedCategory] = useState('fruits');
 
   const categories = [
-    { key: 'fruits', icon: Apple, color: 'text-green-600 bg-green-50', label: t('shopping.categories.fruits') },
-    { key: 'meat', icon: Beef, color: 'text-red-600 bg-red-50', label: t('shopping.categories.meat') },
-    { key: 'dairy', icon: Milk, color: 'text-blue-600 bg-blue-50', label: t('shopping.categories.dairy') },
-    { key: 'grains', icon: Wheat, color: 'text-amber-600 bg-amber-50', label: t('shopping.categories.grains') },
-    { key: 'spices', icon: Salad, color: 'text-orange-600 bg-orange-50', label: t('shopping.categories.spices') },
-    { key: 'drinks', icon: Coffee, color: 'text-purple-600 bg-purple-50', label: t('shopping.categories.drinks') },
-    { key: 'other', icon: Package, color: 'text-stone-600 bg-stone-50', label: t('shopping.categories.other') }
+    { key: 'fruits', icon: Apple, color: 'text-emerald-700 bg-emerald-50', label: t('shopping.categories.fruits') },
+    { key: 'meat', icon: Beef, color: 'text-rose-700 bg-rose-50', label: t('shopping.categories.meat') },
+    { key: 'dairy', icon: Milk, color: 'text-sky-700 bg-sky-50', label: t('shopping.categories.dairy') },
+    { key: 'grains', icon: Wheat, color: 'text-amber-700 bg-amber-50', label: t('shopping.categories.grains') },
+    { key: 'spices', icon: Salad, color: 'text-orange-700 bg-orange-50', label: t('shopping.categories.spices') },
+    { key: 'drinks', icon: Coffee, color: 'text-violet-700 bg-violet-50', label: t('shopping.categories.drinks') },
+    { key: 'other', icon: Package, color: 'text-stone-600 bg-stone-100', label: t('shopping.categories.other') }
   ];
 
   const getCategoryInfo = (key) => categories.find(c => c.key === key) || categories[6];

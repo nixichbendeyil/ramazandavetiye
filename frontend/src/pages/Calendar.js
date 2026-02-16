@@ -10,7 +10,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Plus, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight, Share2, Clock, Copy, Check } from 'lucide-react';
 import { format, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, getDay, isSameMonth } from 'date-fns';
 import { de, tr } from 'date-fns/locale';
 
@@ -23,10 +23,13 @@ const CalendarPage = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [shareMessage, setShareMessage] = useState('');
   const [newEvent, setNewEvent] = useState({
     name: '',
     type: 'hosting',
     location: '',
+    address: '',
+    time: '18:00',
     notes: '',
     menu: []
   });
@@ -76,7 +79,7 @@ const CalendarPage = () => {
       ...newEvent,
       date: selectedDate.toISOString().split('T')[0]
     });
-    setNewEvent({ name: '', type: 'hosting', location: '', notes: '', menu: [] });
+    setNewEvent({ name: '', type: 'hosting', location: '', address: '', time: '18:00', notes: '', menu: [] });
     setIsAddDialogOpen(false);
   };
 

@@ -378,11 +378,11 @@ const CalendarPage = () => {
                         {t('calendar.addEvent')}
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="rounded-2xl" data-testid="add-event-dialog">
+                    <DialogContent className="rounded-2xl max-h-[85vh] overflow-y-auto" data-testid="add-event-dialog">
                       <DialogHeader>
                         <DialogTitle className="font-playfair text-xl">{t('calendar.addEvent')}</DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 pt-4">
+                      <div className="space-y-4 pt-4 pb-4">
                         <div>
                           <Label className="text-stone-600">{t('calendar.guestName')}</Label>
                           <Input

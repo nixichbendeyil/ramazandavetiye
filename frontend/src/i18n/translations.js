@@ -13,13 +13,13 @@ export const translations = {
       // Dashboard
       dashboard: {
         title: 'Fastenmonat',
-        subtitle: 'Dein täglicher Überblick',
+        subtitle: 'Dein taglicher Uberblick',
         timeToIftar: 'Zeit bis Iftar',
         timeToSahur: 'Zeit bis Sahur',
         prayerTimes: 'Gebetszeiten',
         todayEvents: 'Heute',
         noEvents: 'Keine Termine heute',
-        hosting: 'Du empfängst Gäste',
+        hosting: 'Du empfangst Gaste',
         invited: 'Du bist eingeladen',
         fajr: 'Fajr',
         dhuhr: 'Dhuhr',
@@ -35,7 +35,7 @@ export const translations = {
         title: 'Kalender',
         monthView: 'Monat',
         weekView: 'Woche',
-        addEvent: 'Termin hinzufügen',
+        addEvent: 'Termin hinzufugen',
         hosting: 'Besuch',
         invited: 'Einladung',
         noEvents: 'Keine Termine',
@@ -46,8 +46,8 @@ export const translations = {
         address: 'Adresse',
         time: 'Uhrzeit',
         notes: 'Notizen',
-        menu: 'Menü',
-        delete: 'Löschen',
+        menu: 'Menu',
+        delete: 'Loschen',
         save: 'Speichern',
         cancel: 'Abbrechen',
         edit: 'Bearbeiten',
@@ -59,41 +59,41 @@ export const translations = {
         shareTime: 'Uhrzeit',
         shareAddress: 'Adresse',
         shareCopied: 'In Zwischenablage kopiert!',
-        guests: 'Gäste',
-        addGuest: 'Gast hinzufügen',
+        guests: 'Gaste',
+        addGuest: 'Gast hinzufugen',
         guestNamePlaceholder: 'Name des Gastes',
-        noGuests: 'Noch keine Gäste',
+        noGuests: 'Noch keine Gaste',
         companions: 'Wir gehen mit',
-        companionPlaceholder: 'z.B. Familie Öztürk',
+        companionPlaceholder: 'z.B. Familie Ozturk',
         noCompanions: 'Noch keine Begleiter',
         pending: 'Ausstehend',
         accepted: 'Zugesagt',
         declined: 'Abgesagt',
-        guestCount: 'Gäste'
+        guestCount: 'Gaste'
       },
       // Shopping List
       shopping: {
         title: 'Einkaufsliste',
-        addItem: 'Artikel hinzufügen',
+        addItem: 'Artikel hinzufugen',
         categories: {
-          fruits: 'Obst & Gemüse',
+          fruits: 'Obst & Gemuse',
           meat: 'Fleisch',
           dairy: 'Milchprodukte',
           grains: 'Getreide & Brot',
-          spices: 'Gewürze',
-          drinks: 'Getränke',
+          spices: 'Gewurze',
+          drinks: 'Getranke',
           other: 'Sonstiges'
         },
         itemName: 'Artikelname',
         quantity: 'Menge',
         category: 'Kategorie',
-        clearCompleted: 'Erledigte löschen',
+        clearCompleted: 'Erledigte loschen',
         noItems: 'Keine Artikel in der Liste'
       },
       // Recipes
       recipes: {
         title: 'Rezepte',
-        addRecipe: 'Rezept hinzufügen',
+        addRecipe: 'Rezept hinzufugen',
         favorites: 'Favoriten',
         all: 'Alle',
         prepTime: 'Zubereitungszeit',
@@ -105,7 +105,7 @@ export const translations = {
           main: 'Hauptspeise',
           dessert: 'Dessert',
           salad: 'Salat',
-          drink: 'Getränk'
+          drink: 'Getrank'
         },
         noRecipes: 'Keine Rezepte gespeichert'
       },
@@ -114,14 +114,14 @@ export const translations = {
         title: 'Einstellungen',
         language: 'Sprache',
         city: 'Stadt',
-        selectCity: 'Stadt auswählen',
+        selectCity: 'Stadt auswahlen',
         country: 'Land',
         germany: 'Deutschland',
-        turkey: 'Türkei',
+        turkey: 'Turkei',
         theme: 'Design',
         lightMode: 'Hell',
         darkMode: 'Dunkel',
-        about: 'Über die App',
+        about: 'Uber die App',
         version: 'Version'
       },
       // Common
@@ -129,8 +129,8 @@ export const translations = {
         loading: 'Laden...',
         error: 'Fehler',
         success: 'Erfolg',
-        confirm: 'Bestätigen',
-        close: 'Schließen',
+        confirm: 'Bestatigen',
+        close: 'Schliessen',
         yes: 'Ja',
         no: 'Nein',
         today: 'Heute'
@@ -201,7 +201,7 @@ export const translations = {
         guestNamePlaceholder: 'Misafir adi',
         noGuests: 'Henuz misafir yok',
         companions: 'Birlikte gidiyoruz',
-        companionPlaceholder: 'Örn. Öztürk ailesi',
+        companionPlaceholder: 'Orn. Ozturk ailesi',
         noCompanions: 'Henuz yol arkadasi yok',
         pending: 'Bekliyor',
         accepted: 'Kabul etti',
@@ -309,8 +309,6 @@ export const cities = {
     { name: 'Eskisehir', nameDE: 'Eskisehir', nameTR: 'Eskisehir' },
     { name: 'Trabzon', nameDE: 'Trabzon', nameTR: 'Trabzon' },
     { name: 'Samsun', nameDE: 'Samsun', nameTR: 'Samsun' },
-    { name: 'Diyarbakir', nameDE: 'Diyarbakir', nameTR: 'Diyarbakir' },
-    { name: 'Sakarya', nameDE: 'Sakarya', nameTR: 'Sakarya' },
-    { name: 'Karasu', nameDE: 'Karasu (Sakarya)', nameTR: 'Karasu (Sakarya)' }
+    { name: 'Diyarbakir', nameDE: 'Diyarbakir', nameTR: 'Diyarbakir' }
   ]
 };

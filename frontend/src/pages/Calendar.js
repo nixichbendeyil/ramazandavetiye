@@ -40,46 +40,64 @@ const CalendarPage = () => {
   const selectedDateEvents = getEventsByDate(selectedDate);
 
   const getEventsForDay = (date) => {
-    return events.filter(event => {
-      const eventDate = new Date(event.date);
-      return isSameDay(eventDate, date);
-    });
+    // Format the comparison date to local string
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+
+    return events.filter(event => event.date === dateStr);
   };
 
   const generateCalendarDays = () => {
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
-    
+
     const startDay = getDay(start);
     const paddingStart = startDay === 0 ? 6 : startDay - 1;
     const prevMonthDays = [];
     for (let i = paddingStart - 1; i >= 0; i--) {
       prevMonthDays.push(addDays(start, -(i + 1)));
     }
-    
+
     const totalDays = prevMonthDays.length + days.length;
     const paddingEnd = totalDays % 7 === 0 ? 0 : 7 - (totalDays % 7);
     const nextMonthDays = [];
     for (let i = 1; i <= paddingEnd; i++) {
       nextMonthDays.push(addDays(end, i));
     }
-    
+
     return [...prevMonthDays, ...days, ...nextMonthDays];
   };
 
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-  const weekEvents = weekDays.flatMap(day => 
+  const weekEvents = weekDays.flatMap(day =>
     getEventsForDay(day).map(event => ({ ...event, dayDate: day }))
   ).sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const handleAddEvent = () => {
-    if (!newEvent.name.trim()) return;
+    // Validation: For 'invited' need name, for 'hosting' need at least one guest
+    if (newEvent.type === 'invited' && !newEvent.name.trim()) return;
+    if (newEvent.type === 'hosting' && (!newEvent.guests || newEvent.guests.length === 0)) return;
+
+    // Use local date format to avoid timezone issues
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const localDateStr = `${year}-${month}-${day}`;
+
+    // For hosting, use first guest name as the event name
+    const eventName = newEvent.type === 'hosting'
+      ? newEvent.guests.map(g => g.name).join(', ')
+      : newEvent.name;
+
     addEvent({
       ...newEvent,
-      date: selectedDate.toISOString().split('T')[0]
+      name: eventName,
+      date: localDateStr
     });
     setNewEvent({ name: '', type: 'hosting', location: '', address: '', time: '18:00', notes: '', menu: [], guests: [] });
     setNewGuestName('');
@@ -107,25 +125,25 @@ const CalendarPage = () => {
   const handleShareEvent = async (event) => {
     const eventDate = new Date(event.date);
     const formattedDate = format(eventDate, 'EEEE, d. MMMM yyyy', { locale });
-    
-    const shareText = event.type === 'hosting' 
+
+    const shareText = event.type === 'hosting'
       ? t('calendar.shareHostText')
       : t('calendar.shareInviteText');
-    
+
     let message = `🌙 ${t('calendar.shareTitle')}\n\n`;
     message += `${shareText}\n\n`;
     message += `📅 ${t('calendar.shareDate')}: ${formattedDate}\n`;
-    
+
     if (event.time) {
       message += `🕐 ${t('calendar.shareTime')}: ${event.time} Uhr\n`;
     }
-    
+
     if (event.address) {
       message += `📍 ${t('calendar.shareAddress')}: ${event.address}\n`;
     } else if (event.location) {
       message += `📍 ${t('calendar.location')}: ${event.location}\n`;
     }
-    
+
     if (event.notes) {
       message += `\n📝 ${event.notes}`;
     }
@@ -222,7 +240,7 @@ const CalendarPage = () => {
   };
 
   const calendarDays = generateCalendarDays();
-  const weekDayNames = language === 'de' 
+  const weekDayNames = language === 'de'
     ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
     : ['Pt', 'Sa', 'Ca', 'Pe', 'Cu', 'Ct', 'Pa'];
 
@@ -242,8 +260,8 @@ const CalendarPage = () => {
           <button
             onClick={() => setViewMode('month')}
             className={`px-4 py-1.5 text-sm font-medium rounded-full transition-all ${
-              viewMode === 'month' 
-                ? 'bg-[#0F4C5C] text-white shadow-sm' 
+              viewMode === 'month'
+                ? 'bg-[#0F4C5C] text-white shadow-sm'
                 : 'text-stone-600 hover:text-stone-900'
             }`}
             data-testid="month-view-btn"
@@ -253,8 +271,8 @@ const CalendarPage = () => {
           <button
             onClick={() => setViewMode('week')}
             className={`px-4 py-1.5 text-sm font-medium rounded-full transition-all ${
-              viewMode === 'week' 
-                ? 'bg-[#0F4C5C] text-white shadow-sm' 
+              viewMode === 'week'
+                ? 'bg-[#0F4C5C] text-white shadow-sm'
                 : 'text-stone-600 hover:text-stone-900'
             }`}
             data-testid="week-view-btn"
@@ -322,9 +340,9 @@ const CalendarPage = () => {
                         onClick={() => setSelectedDate(day)}
                         className={`
                           relative aspect-square flex flex-col items-center justify-center rounded-xl transition-all
-                          ${isSelected 
-                            ? 'bg-[#0F4C5C] text-white shadow-md' 
-                            : isToday 
+                          ${isSelected
+                            ? 'bg-[#0F4C5C] text-white shadow-md'
+                            : isToday
                               ? 'bg-[#0F4C5C]/10 text-[#0F4C5C] font-semibold'
                               : isCurrentMonth
                                 ? 'hover:bg-stone-100 text-stone-700'
@@ -383,16 +401,7 @@ const CalendarPage = () => {
                         <DialogTitle className="font-playfair text-xl">{t('calendar.addEvent')}</DialogTitle>
                       </DialogHeader>
                       <div className="space-y-4 pt-4 pb-4">
-                        <div>
-                          <Label className="text-stone-600">{t('calendar.guestName')}</Label>
-                          <Input
-                            value={newEvent.name}
-                            onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-                            placeholder="z.B. Familie Yilmaz"
-                            className="mt-1.5 rounded-xl"
-                            data-testid="event-name-input"
-                          />
-                        </div>
+                        {/* Event Type - First so user can choose */}
                         <div>
                           <Label className="text-stone-600">{t('calendar.eventType')}</Label>
                           <Select value={newEvent.type} onValueChange={(value) => setNewEvent({ ...newEvent, type: value })}>
@@ -415,6 +424,65 @@ const CalendarPage = () => {
                             </SelectContent>
                           </Select>
                         </div>
+
+                        {/* For INVITED: Show "Name" (who invited you) */}
+                        {newEvent.type === 'invited' && (
+                          <div>
+                            <Label className="text-stone-600">{language === 'de' ? 'Eingeladen von' : 'Davet eden'}</Label>
+                            <Input
+                              value={newEvent.name}
+                              onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+                              placeholder={language === 'de' ? 'z.B. Familie Yilmaz' : 'orn. Yilmaz Ailesi'}
+                              className="mt-1.5 rounded-xl"
+                              data-testid="event-name-input"
+                            />
+                          </div>
+                        )}
+
+                        {/* For HOSTING: Show Guests section at top */}
+                        {newEvent.type === 'hosting' && (
+                          <div>
+                            <Label className="text-stone-600">{t('calendar.guests')}</Label>
+                            <div className="mt-1.5 flex gap-2">
+                              <Input
+                                value={newGuestName}
+                                onChange={(e) => setNewGuestName(e.target.value)}
+                                placeholder={t('calendar.guestNamePlaceholder')}
+                                className="rounded-xl flex-1"
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
+                                data-testid="new-guest-input"
+                              />
+                              <Button
+                                type="button"
+                                onClick={addGuestToNewEvent}
+                                size="icon"
+                                className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                                data-testid="add-guest-btn"
+                              >
+                                <UserPlus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            {newEvent.guests && newEvent.guests.length > 0 ? (
+                              <div className="mt-3 space-y-2">
+                                {newEvent.guests.map((guest) => (
+                                  <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                                    <span className="text-sm text-stone-700">{guest.name}</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeGuestFromNewEvent(guest.id)}
+                                      className="text-stone-400 hover:text-red-500 transition-colors"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-stone-400 mt-2">{t('calendar.noGuests')}</p>
+                            )}
+                          </div>
+                        )}
+
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <Label className="text-stone-600">{t('calendar.time')}</Label>
@@ -442,57 +510,56 @@ const CalendarPage = () => {
                           <Input
                             value={newEvent.address}
                             onChange={(e) => setNewEvent({ ...newEvent, address: e.target.value })}
-                            placeholder="z.B. Musterstraße 123, 12345 Berlin"
+                            placeholder="z.B. Musterstrasse 123, 12345 Berlin"
                             className="mt-1.5 rounded-xl"
                             data-testid="event-address-input"
                           />
                         </div>
-                        {/* Guest List Section - For both event types */}
-                        <div>
-                          <Label className="text-stone-600">
-                            {newEvent.type === 'hosting' ? t('calendar.guests') : t('calendar.companions')}
-                          </Label>
-                          <div className="mt-1.5 flex gap-2">
-                            <Input
-                              value={newGuestName}
-                              onChange={(e) => setNewGuestName(e.target.value)}
-                              placeholder={newEvent.type === 'hosting' ? t('calendar.guestNamePlaceholder') : t('calendar.companionPlaceholder')}
-                              className="rounded-xl flex-1"
-                              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
-                              data-testid="new-guest-input"
-                            />
-                            <Button
-                              type="button"
-                              onClick={addGuestToNewEvent}
-                              size="icon"
-                              className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
-                              data-testid="add-guest-btn"
-                            >
-                              <UserPlus className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          {/* Guest List */}
-                          {newEvent.guests && newEvent.guests.length > 0 ? (
-                            <div className="mt-3 space-y-2">
-                              {newEvent.guests.map((guest) => (
-                                <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
-                                  <span className="text-sm text-stone-700">{guest.name}</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => removeGuestFromNewEvent(guest.id)}
-                                    className="text-stone-400 hover:text-red-500 transition-colors"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </button>
-                                </div>
-                              ))}
+
+                        {/* For INVITED: Show "Wir gehen mit" (companions) */}
+                        {newEvent.type === 'invited' && (
+                          <div>
+                            <Label className="text-stone-600">{t('calendar.companions')}</Label>
+                            <div className="mt-1.5 flex gap-2">
+                              <Input
+                                value={newGuestName}
+                                onChange={(e) => setNewGuestName(e.target.value)}
+                                placeholder={t('calendar.companionPlaceholder')}
+                                className="rounded-xl flex-1"
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
+                                data-testid="new-guest-input"
+                              />
+                              <Button
+                                type="button"
+                                onClick={addGuestToNewEvent}
+                                size="icon"
+                                className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                                data-testid="add-guest-btn"
+                              >
+                                <UserPlus className="w-4 h-4" />
+                              </Button>
                             </div>
-                          ) : (
-                            <p className="text-xs text-stone-400 mt-2">
-                              {newEvent.type === 'hosting' ? t('calendar.noGuests') : t('calendar.noCompanions')}
-                            </p>
-                          )}
-                        </div>
+                            {newEvent.guests && newEvent.guests.length > 0 ? (
+                              <div className="mt-3 space-y-2">
+                                {newEvent.guests.map((guest) => (
+                                  <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                                    <span className="text-sm text-stone-700">{guest.name}</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeGuestFromNewEvent(guest.id)}
+                                      className="text-stone-400 hover:text-red-500 transition-colors"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-stone-400 mt-2">{t('calendar.noCompanions')}</p>
+                            )}
+                          </div>
+                        )}
+
                         <div>
                           <Label className="text-stone-600">{t('calendar.notes')}</Label>
                           <Textarea
@@ -535,8 +602,8 @@ const CalendarPage = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <Badge className={`text-xs font-medium ${
-                              event.type === 'hosting' 
-                                ? 'bg-[#0F766E] hover:bg-[#0F766E]' 
+                              event.type === 'hosting'
+                                ? 'bg-[#0F766E] hover:bg-[#0F766E]'
                                 : 'bg-[#B45309] hover:bg-[#B45309]'
                             } text-white`}>
                               {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
@@ -567,8 +634,8 @@ const CalendarPage = () => {
                             {event.guests && event.guests.length > 0 && (
                               <div className="flex items-center gap-2 mt-2 flex-wrap">
                                 <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
-                                  event.type === 'hosting' 
-                                    ? 'bg-[#115E59]/10 text-[#115E59]' 
+                                  event.type === 'hosting'
+                                    ? 'bg-[#115E59]/10 text-[#115E59]'
                                     : 'bg-[#92400E]/10 text-[#92400E]'
                                 }`}>
                                   <Users className="w-3 h-3" />
@@ -730,7 +797,7 @@ const CalendarPage = () => {
                     <Input
                       value={newEvent.address}
                       onChange={(e) => setNewEvent({ ...newEvent, address: e.target.value })}
-                      placeholder="z.B. Musterstraße 123, 12345 Berlin"
+                      placeholder="z.B. Musterstrasse 123, 12345 Berlin"
                       className="mt-1.5 rounded-xl"
                     />
                   </div>
@@ -778,8 +845,8 @@ const CalendarPage = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <Badge className={`text-xs font-medium ${
-                          event.type === 'hosting' 
-                            ? 'bg-[#0F766E] hover:bg-[#0F766E]' 
+                          event.type === 'hosting'
+                            ? 'bg-[#0F766E] hover:bg-[#0F766E]'
                             : 'bg-[#B45309] hover:bg-[#B45309]'
                         } text-white`}>
                           {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
@@ -872,7 +939,7 @@ const CalendarPage = () => {
                 <Input
                   value={editingEvent.address || ''}
                   onChange={(e) => setEditingEvent({ ...editingEvent, address: e.target.value })}
-                  placeholder="z.B. Musterstraße 123, 12345 Berlin"
+                  placeholder="z.B. Musterstrasse 123, 12345 Berlin"
                   className="mt-1.5 rounded-xl"
                   data-testid="edit-event-address-input"
                 />

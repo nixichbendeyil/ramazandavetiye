@@ -871,6 +871,79 @@ const CalendarPage = () => {
                   data-testid="edit-event-address-input"
                 />
               </div>
+              {/* Guest List Section with Status Management - Only for hosting events */}
+              {editingEvent.type === 'hosting' && (
+                <div>
+                  <Label className="text-stone-600">{t('calendar.guests')}</Label>
+                  <div className="mt-1.5 flex gap-2">
+                    <Input
+                      value={newGuestName}
+                      onChange={(e) => setNewGuestName(e.target.value)}
+                      placeholder={t('calendar.guestNamePlaceholder')}
+                      className="rounded-xl flex-1"
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToEditingEvent())}
+                      data-testid="edit-guest-input"
+                    />
+                    <Button
+                      type="button"
+                      onClick={addGuestToEditingEvent}
+                      size="icon"
+                      className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                      data-testid="edit-add-guest-btn"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  {/* Guest List with Status */}
+                  {editingEvent.guests && editingEvent.guests.length > 0 ? (
+                    <div className="mt-3 space-y-2 max-h-40 overflow-y-auto">
+                      {editingEvent.guests.map((guest) => (
+                        <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-stone-700">{guest.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {/* Status buttons */}
+                            <button
+                              type="button"
+                              onClick={() => updateGuestStatus(guest.id, 'pending')}
+                              className={`p-1.5 rounded-md transition-colors ${guest.status === 'pending' ? 'bg-stone-200' : 'hover:bg-stone-100'}`}
+                              title={t('calendar.pending')}
+                            >
+                              <Users className={`w-3.5 h-3.5 ${guest.status === 'pending' ? 'text-stone-700' : 'text-stone-400'}`} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateGuestStatus(guest.id, 'accepted')}
+                              className={`p-1.5 rounded-md transition-colors ${guest.status === 'accepted' ? 'bg-green-100' : 'hover:bg-stone-100'}`}
+                              title={t('calendar.accepted')}
+                            >
+                              <UserCheck className={`w-3.5 h-3.5 ${guest.status === 'accepted' ? 'text-green-600' : 'text-stone-400'}`} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateGuestStatus(guest.id, 'declined')}
+                              className={`p-1.5 rounded-md transition-colors ${guest.status === 'declined' ? 'bg-red-100' : 'hover:bg-stone-100'}`}
+                              title={t('calendar.declined')}
+                            >
+                              <UserX className={`w-3.5 h-3.5 ${guest.status === 'declined' ? 'text-red-600' : 'text-stone-400'}`} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeGuestFromEditingEvent(guest.id)}
+                              className="p-1.5 hover:bg-red-50 rounded-md transition-colors ml-1"
+                            >
+                              <X className="w-3.5 h-3.5 text-stone-400 hover:text-red-500" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-stone-400 mt-2">{t('calendar.noGuests')}</p>
+                  )}
+                </div>
+              )}
               <div>
                 <Label className="text-stone-600">{t('calendar.notes')}</Label>
                 <Textarea

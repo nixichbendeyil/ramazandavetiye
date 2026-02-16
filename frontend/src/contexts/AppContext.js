@@ -92,6 +92,7 @@ export const AppProvider = ({ children }) => {
   // Prayer times state
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [prayerTimesLoading, setPrayerTimesLoading] = useState(true);
+  const [prayerTimesTimezone, setPrayerTimesTimezone] = useState('Europe/Berlin');
 
   // Save to localStorage when state changes
   useEffect(() => {

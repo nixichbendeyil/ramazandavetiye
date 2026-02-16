@@ -447,50 +447,52 @@ const CalendarPage = () => {
                             data-testid="event-address-input"
                           />
                         </div>
-                        {/* Guest List Section - Only for hosting events */}
-                        {newEvent.type === 'hosting' && (
-                          <div>
-                            <Label className="text-stone-600">{t('calendar.guests')}</Label>
-                            <div className="mt-1.5 flex gap-2">
-                              <Input
-                                value={newGuestName}
-                                onChange={(e) => setNewGuestName(e.target.value)}
-                                placeholder={t('calendar.guestNamePlaceholder')}
-                                className="rounded-xl flex-1"
-                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
-                                data-testid="new-guest-input"
-                              />
-                              <Button
-                                type="button"
-                                onClick={addGuestToNewEvent}
-                                size="icon"
-                                className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
-                                data-testid="add-guest-btn"
-                              >
-                                <UserPlus className="w-4 h-4" />
-                              </Button>
-                            </div>
-                            {/* Guest List */}
-                            {newEvent.guests && newEvent.guests.length > 0 ? (
-                              <div className="mt-3 space-y-2">
-                                {newEvent.guests.map((guest) => (
-                                  <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
-                                    <span className="text-sm text-stone-700">{guest.name}</span>
-                                    <button
-                                      type="button"
-                                      onClick={() => removeGuestFromNewEvent(guest.id)}
-                                      className="text-stone-400 hover:text-red-500 transition-colors"
-                                    >
-                                      <X className="w-4 h-4" />
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-stone-400 mt-2">{t('calendar.noGuests')}</p>
-                            )}
+                        {/* Guest List Section - For both event types */}
+                        <div>
+                          <Label className="text-stone-600">
+                            {newEvent.type === 'hosting' ? t('calendar.guests') : t('calendar.companions')}
+                          </Label>
+                          <div className="mt-1.5 flex gap-2">
+                            <Input
+                              value={newGuestName}
+                              onChange={(e) => setNewGuestName(e.target.value)}
+                              placeholder={newEvent.type === 'hosting' ? t('calendar.guestNamePlaceholder') : t('calendar.companionPlaceholder')}
+                              className="rounded-xl flex-1"
+                              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
+                              data-testid="new-guest-input"
+                            />
+                            <Button
+                              type="button"
+                              onClick={addGuestToNewEvent}
+                              size="icon"
+                              className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                              data-testid="add-guest-btn"
+                            >
+                              <UserPlus className="w-4 h-4" />
+                            </Button>
                           </div>
-                        )}
+                          {/* Guest List */}
+                          {newEvent.guests && newEvent.guests.length > 0 ? (
+                            <div className="mt-3 space-y-2">
+                              {newEvent.guests.map((guest) => (
+                                <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                                  <span className="text-sm text-stone-700">{guest.name}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeGuestFromNewEvent(guest.id)}
+                                    className="text-stone-400 hover:text-red-500 transition-colors"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-xs text-stone-400 mt-2">
+                              {newEvent.type === 'hosting' ? t('calendar.noGuests') : t('calendar.noCompanions')}
+                            </p>
+                          )}
+                        </div>
                         <div>
                           <Label className="text-stone-600">{t('calendar.notes')}</Label>
                           <Textarea

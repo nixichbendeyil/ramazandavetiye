@@ -58,7 +58,15 @@ export const translations = {
         shareDate: 'Datum',
         shareTime: 'Uhrzeit',
         shareAddress: 'Adresse',
-        shareCopied: 'In Zwischenablage kopiert!'
+        shareCopied: 'In Zwischenablage kopiert!',
+        guests: 'Gäste',
+        addGuest: 'Gast hinzufügen',
+        guestNamePlaceholder: 'Name des Gastes',
+        noGuests: 'Noch keine Gäste',
+        pending: 'Ausstehend',
+        accepted: 'Zugesagt',
+        declined: 'Abgesagt',
+        guestCount: 'Gäste'
       },
       // Shopping List
       shopping: {
@@ -184,7 +192,15 @@ export const translations = {
         shareDate: 'Tarih',
         shareTime: 'Saat',
         shareAddress: 'Adres',
-        shareCopied: 'Panoya kopyalandi!'
+        shareCopied: 'Panoya kopyalandi!',
+        guests: 'Misafirler',
+        addGuest: 'Misafir ekle',
+        guestNamePlaceholder: 'Misafir adi',
+        noGuests: 'Henuz misafir yok',
+        pending: 'Bekliyor',
+        accepted: 'Kabul etti',
+        declined: 'Reddetti',
+        guestCount: 'Misafir'
       },
       // Shopping List
       shopping: {

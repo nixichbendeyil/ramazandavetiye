@@ -471,7 +471,8 @@ const CalendarPage = () => {
                               data-testid={`edit-event-${event.id}`}
                             >
                               <Edit2 className="w-4 h-4 text-stone-400" />
-                          </button>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}

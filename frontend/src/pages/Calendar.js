@@ -100,6 +100,62 @@ const CalendarPage = () => {
     setIsEditDialogOpen(true);
   };
 
+  // Share event function
+  const handleShareEvent = async (event) => {
+    const eventDate = new Date(event.date);
+    const formattedDate = format(eventDate, 'EEEE, d. MMMM yyyy', { locale });
+    
+    const shareText = event.type === 'hosting' 
+      ? t('calendar.shareHostText')
+      : t('calendar.shareInviteText');
+    
+    let message = `🌙 ${t('calendar.shareTitle')}\n\n`;
+    message += `${shareText}\n\n`;
+    message += `📅 ${t('calendar.shareDate')}: ${formattedDate}\n`;
+    
+    if (event.time) {
+      message += `🕐 ${t('calendar.shareTime')}: ${event.time} Uhr\n`;
+    }
+    
+    if (event.address) {
+      message += `📍 ${t('calendar.shareAddress')}: ${event.address}\n`;
+    } else if (event.location) {
+      message += `📍 ${t('calendar.location')}: ${event.location}\n`;
+    }
+    
+    if (event.notes) {
+      message += `\n📝 ${event.notes}`;
+    }
+
+    // Check if Web Share API is available (mainly mobile)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t('calendar.shareTitle'),
+          text: message
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          // Fallback to clipboard
+          copyToClipboard(message);
+        }
+      }
+    } else {
+      // Fallback for desktop browsers
+      copyToClipboard(message);
+    }
+  };
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setShareMessage(t('calendar.shareCopied'));
+      setTimeout(() => setShareMessage(''), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
   const navigateMonth = (direction) => {
     setCurrentMonth(prev => direction === 'next' ? addMonths(prev, 1) : subMonths(prev, 1));
   };

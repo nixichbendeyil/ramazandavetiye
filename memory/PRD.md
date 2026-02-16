@@ -50,6 +50,8 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - ✅ Termine bearbeiten und löschen
 - ✅ Farbmarkierung (Grün/Gold)
 - ✅ Namen direkt im Kalender anzeigen
+- ✅ Uhrzeit und Adresse für Events
+- ✅ **Teilen-Funktion** (Web Share API für Mobile, Clipboard für Desktop)
 
 ### Einkaufsliste
 - ✅ Artikel hinzufügen mit Kategorie
@@ -80,6 +82,7 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - [x] Zweisprachigkeit
 - [x] Stadtauswahl
 - [x] PWA-Unterstützung (installierbar auf Handy)
+- [x] Teilen-Funktion für Einladungen (WhatsApp, SMS, etc.)
 
 ## P1 Features (Backlog)
 - [ ] Menüplaner direkt mit Terminen verknüpfen

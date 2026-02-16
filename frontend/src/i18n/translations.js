@@ -309,6 +309,8 @@ export const cities = {
     { name: 'Eskisehir', nameDE: 'Eskisehir', nameTR: 'Eskisehir' },
     { name: 'Trabzon', nameDE: 'Trabzon', nameTR: 'Trabzon' },
     { name: 'Samsun', nameDE: 'Samsun', nameTR: 'Samsun' },
-    { name: 'Diyarbakir', nameDE: 'Diyarbakir', nameTR: 'Diyarbakir' }
+    { name: 'Diyarbakir', nameDE: 'Diyarbakir', nameTR: 'Diyarbakir' },
+    { name: 'Sakarya', nameDE: 'Sakarya', nameTR: 'Sakarya' },
+    { name: 'Karasu', nameDE: 'Karasu (Sakarya)', nameTR: 'Karasu (Sakarya)' }
   ]
 };

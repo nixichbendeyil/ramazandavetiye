@@ -6,53 +6,50 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 ## User Persona
 - Muslimische Familien in Deutschland und der Türkei
 - Organisieren Iftar-Einladungen und Besuche während des Ramadan
-- Benötigen Gebetszeiten für ihre Stadt
 
 ## User Choices
-1. Gebetszeiten-API: Aladhan (kostenlos)
-2. Authentifizierung: Keine
-3. Datenspeicherung: Nur localStorage (lokal)
-4. Design: Design Agent Entscheidung (Emerald/Gold Palette)
-5. Standardsprache: Deutsch
+1. Authentifizierung: Keine (rein lokal)
+2. Datenspeicherung: Nur localStorage (lokal)
+3. Design: Emerald/Gold Palette
+4. Standardsprache: Deutsch
+5. PWA-fähig: Ja (installierbar auf Handy)
 
 ## Core Requirements (Static)
 - Zweisprachiges Interface (Deutsch/Türkisch)
-- Dashboard mit Iftar-Countdown und Gebetszeiten
+- Dashboard mit Besuchs-/Einladungsübersicht
 - Kalender mit Monats-/Wochenansicht
 - Farbmarkierung: Grün für "Gastgeber", Gold für "Eingeladen"
 - Einkaufsliste mit Kategorien
 - Rezept-Favoriten mit Bildern
-- Stadtauswahl für Deutschland und Türkei
 - Keine arabische Schrift
 
 ## Architecture
 - **Frontend**: React, Tailwind CSS, Shadcn UI
 - **State Management**: React Context + localStorage
-- **API**: Aladhan Prayer Times API
 - **i18n**: react-i18next (DE/TR)
 - **PWA**: Service Worker + Web App Manifest (installierbar)
 - **No Backend Authentication** - alle Daten lokal
 
-## What's Been Implemented (February 2026)
+## What's Been Implemented (Februar 2026)
 
 ### Dashboard
 - ✅ Hero-Bild mit Moschee-Silhouette
-- ✅ Iftar-Countdown mit Live-Timer
-- ✅ Gebetszeiten von Aladhan API
+- ✅ Statistik-Karten (Besuche/Einladungen Anzahl)
 - ✅ Heutige Termine anzeigen
-- ✅ Stadtanzeige
+- ✅ Kommende Termine (nächste 7 Tage)
+- ✅ Benutzername-Anzeige (von Einstellungen)
 
 ### Kalender
-- ✅ Monatsansicht mit react-day-picker
+- ✅ Monatsansicht mit Farbpunkten
 - ✅ Wochenansicht
 - ✅ Umschaltung Monat/Woche
 - ✅ Termine hinzufügen (Besuch/Einladung)
 - ✅ Termine bearbeiten und löschen
 - ✅ Farbmarkierung (Grün/Gold)
-- ✅ Namen direkt im Kalender anzeigen
 - ✅ Uhrzeit und Adresse für Events
 - ✅ **Teilen-Funktion** (Web Share API für Mobile, Clipboard für Desktop)
 - ✅ **Gästeliste** pro Event mit Zu-/Absagen-Status (pending/accepted/declined)
+- ✅ **Begleiter** für "Eingeladen" Events
 
 ### Einkaufsliste
 - ✅ Artikel hinzufügen mit Kategorie
@@ -70,23 +67,25 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 
 ### Einstellungen
 - ✅ Sprachumschaltung DE/TR
-- ✅ Länderauswahl (Deutschland/Türkei)
-- ✅ Stadtauswahl (15 Städte pro Land)
-- ✅ App-Info
+- ✅ **Mein Name** - Benutzername eingeben (zeigt auf Dashboard)
+- ✅ **Erstellt von: Karasu AK58**
+- ✅ App-Info und Version 1.1.0
 
 ## P0 Features (Completed)
-- [x] Dashboard mit Countdown
-- [x] Gebetszeiten-Integration
+- [x] Dashboard mit Übersicht
 - [x] Kalender mit Events
 - [x] Einkaufsliste
 - [x] Rezepte-Favoriten
 - [x] Zweisprachigkeit
-- [x] Stadtauswahl
 - [x] PWA-Unterstützung (installierbar auf Handy)
 - [x] Teilen-Funktion für Einladungen (WhatsApp, SMS, etc.)
 - [x] Gästeliste mit Zu-/Absagen-Verwaltung
+- [x] Benutzername-Funktion
 
 ## P1 Features (Backlog)
+- [ ] Gebetszeiten-Integration (Aladhan API mit Diyanet)
+- [ ] Iftar-Countdown auf Dashboard
+- [ ] Stadtauswahl für Gebetszeiten
 - [ ] Menüplaner direkt mit Terminen verknüpfen
 - [ ] Einkaufsliste aus Rezepten generieren
 - [ ] Export/Import von Daten
@@ -98,19 +97,18 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - [ ] Teilen von Einladungen per Link
 - [ ] Cloud-Synchronisation (optional)
 
-## PWA Installation (Februar 2026)
-Die App ist jetzt als Progressive Web App (PWA) verfügbar:
+## PWA Installation
+Die App ist als Progressive Web App (PWA) verfügbar:
 - **Android**: Chrome öffnen → "Zum Startbildschirm hinzufügen"
 - **iOS**: Safari öffnen → Teilen-Button → "Zum Home-Bildschirm"
 - **Desktop**: Browser-Adressleiste → Installieren-Symbol
 
-### PWA-Features:
-- Eigenes App-Icon (Mondsichel + Kalender)
-- Standalone-Modus (ohne Browser-Leiste)
-- Offline-Unterstützung (Cache)
-- Schnellstart vom Homescreen
+## GitHub Repository
+https://github.com/nixichbendeyil/ramazandavetiye.git
+
+## Deployment
+- Vercel (Continuous Deployment via GitHub)
 
 ## Next Action Items
-1. Menüplaner mit Kalender-Events verknüpfen
-2. Automatische Einkaufslisten-Generierung aus Rezepten
-3. Wochenansicht verbessern mit mehr Details
+1. Bei Bedarf: Gebetszeiten-Integration hinzufügen
+2. Bei Bedarf: Karasu Stadt zur Liste hinzufügen

@@ -10,7 +10,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Plus, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight, Share2, Clock, Copy, Check } from 'lucide-react';
+import { Plus, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight, Share2, Clock, Check, UserPlus, UserCheck, UserX, X } from 'lucide-react';
 import { format, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, getDay, isSameMonth } from 'date-fns';
 import { de, tr } from 'date-fns/locale';
 
@@ -24,6 +24,7 @@ const CalendarPage = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [shareMessage, setShareMessage] = useState('');
+  const [newGuestName, setNewGuestName] = useState('');
   const [newEvent, setNewEvent] = useState({
     name: '',
     type: 'hosting',
@@ -31,7 +32,8 @@ const CalendarPage = () => {
     address: '',
     time: '18:00',
     notes: '',
-    menu: []
+    menu: [],
+    guests: []
   });
 
   const locale = language === 'de' ? de : tr;

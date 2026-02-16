@@ -134,16 +134,26 @@ const CalendarPage = () => {
         <h1 className="font-playfair text-2xl font-bold text-stone-800">
           {t('calendar.title')}
         </h1>
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v)} key={viewMode}>
-          <TabsList className="bg-stone-100">
-            <TabsTrigger value="month" data-testid="month-view-btn">
-              {t('calendar.monthView')}
-            </TabsTrigger>
-            <TabsTrigger value="week" data-testid="week-view-btn">
-              {t('calendar.weekView')}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === 'month' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('month')}
+            className={viewMode === 'month' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+            data-testid="month-view-btn"
+          >
+            {t('calendar.monthView')}
+          </Button>
+          <Button
+            variant={viewMode === 'week' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('week')}
+            className={viewMode === 'week' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+            data-testid="week-view-btn"
+          >
+            {t('calendar.weekView')}
+          </Button>
+        </div>
       </motion.div>
 
       {/* Main Content - Two Column Layout on Desktop */}

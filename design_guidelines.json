@@ -1,91 +1,139 @@
 {
-  "project_name": "Ramadan Guest & Calendar App",
-  "theme": {
-    "name": "Spiritual Warmth",
-    "mode": "light",
-    "colors": {
-      "background": "#FDFBF7",
-      "foreground": "#1F2937",
-      "primary": "#047857",
-      "primary_foreground": "#FFFFFF",
-      "secondary": "#D97706",
-      "secondary_foreground": "#FFFFFF",
-      "accent": "#FCD34D",
-      "muted": "#F5F5F4",
-      "border": "#E5E7EB",
-      "card": "#FFFFFF",
-      "hosting": "#047857",
-      "invited": "#D97706"
+  "design_guidelines": {
+    "brand_identity": {
+      "name": "Ramadan Calendar",
+      "tone": "Spiritual, Elegant, Warm, Professional",
+      "theme": "Modern Heritage",
+      "keywords": ["Serenity", "Hospitality", "Tradition", "Clarity"],
+      "universal_rules": [
+        "Avoid high-saturation 'digital' colors (no neon green/bright orange).",
+        "Use 'Jewel Tones' for accents (Emerald, Sapphire, Ruby, Gold) on neutral backgrounds.",
+        "Generous whitespace (padding) to create a sense of luxury.",
+        "Roundness: Use rounded-2xl or rounded-3xl for cards to feel organic and friendly.",
+        "Typography: Contrast Serif headings (Tradition) with Sans-serif body (Modernity)."
+      ]
     },
     "typography": {
-      "headings": {
-        "font_family": "Playfair Display, serif",
-        "weights": ["600", "700"]
+      "font_family": {
+        "heading": "Playfair Display, serif",
+        "body": "Outfit, sans-serif",
+        "accent": "Outfit, sans-serif"
       },
-      "body": {
-        "font_family": "Outfit, sans-serif",
-        "weights": ["300", "400", "500"]
+      "scale": {
+        "h1": "text-4xl md:text-5xl font-semibold tracking-tight leading-tight",
+        "h2": "text-3xl md:text-4xl font-medium tracking-tight",
+        "h3": "text-2xl font-medium tracking-normal",
+        "body": "text-base leading-relaxed text-stone-600",
+        "caption": "text-xs font-medium tracking-widest uppercase text-stone-500"
+      },
+      "usage": {
+        "headings": "Use Playfair Display for all page titles and greetings. Capitalize normally.",
+        "subheadings": "Use Outfit for section headers. Use uppercase with tracking-widest for small labels.",
+        "body": "Use Outfit for all paragraphs and UI elements."
       }
     },
-    "radius": "0.75rem",
-    "spacing": {
-      "container_padding": "p-4 md:p-6",
-      "section_gap": "gap-6"
-    }
-  },
-  "visual_enhancers": {
-    "gradients": {
-      "hero": "linear-gradient(135deg, #047857 0%, #064E3B 100%)",
-      "gold_accent": "linear-gradient(135deg, #FCD34D 0%, #D97706 100%)"
+    "colors": {
+      "palette": {
+        "background": {
+          "default": "#FAFAF9", 
+          "paper": "#FFFFFF",
+          "subtle": "#F5F5F4"
+        },
+        "foreground": {
+          "primary": "#1C1917",
+          "secondary": "#57534E",
+          "muted": "#A8A29E"
+        },
+        "brand": {
+          "primary": "#0F4C5C",
+          "secondary": "#C6A87C",
+          "accent": "#D4A373"
+        },
+        "status": {
+          "host": {
+            "bg": "#F0FDFA",
+            "border": "#CCFBF1",
+            "text": "#115E59",
+            "solid": "#0F766E",
+            "description": "For events where the user is HOSTING (Besuch). Use Deep Teal/Emerald tones. Represents Generosity, Grounding, Authority."
+          },
+          "guest": {
+            "bg": "#FFFBEB",
+            "border": "#FEF3C7",
+            "text": "#92400E",
+            "solid": "#B45309",
+            "description": "For events where the user is INVITED (Einladung). Use Warm Gold/Amber tones. Represents Warmth, Celebration, Light."
+          }
+        }
+      },
+      "shadows": {
+        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+        "float": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        "inner": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)"
+      }
     },
-    "shadows": {
-      "soft": "0 4px 20px -2px rgba(4, 120, 87, 0.08)",
-      "card": "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)"
+    "components": {
+      "cards": {
+        "radius": "rounded-2xl",
+        "border": "border border-stone-100",
+        "shadow": "shadow-sm hover:shadow-md transition-shadow duration-300",
+        "padding": "p-6"
+      },
+      "buttons": {
+        "primary": "bg-[#0F4C5C] text-white hover:bg-[#134E4A] shadow-md rounded-full px-8 py-3 font-medium transition-all active:scale-95",
+        "secondary": "bg-[#FFFBEB] text-[#92400E] hover:bg-[#FEF3C7] border border-[#FDE68A] rounded-full px-6 py-2 font-medium transition-all",
+        "ghost": "text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-full px-4 py-2 transition-all"
+      },
+      "navigation": {
+        "bottom_nav": "bg-white/90 backdrop-blur-xl border-t border-stone-100 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]"
+      },
+      "inputs": {
+        "default": "bg-white border-stone-200 focus:border-[#0F4C5C] focus:ring-[#0F4C5C] rounded-xl"
+      }
     },
-    "patterns": "Use subtle Islamic geometric patterns as background overlays with 5% opacity"
-  },
-  "layout_strategy": {
-    "mobile_first": true,
-    "navigation": "Bottom Navigation Bar (Dashboard, Calendar, Shopping, Settings)",
-    "container_max_width": "max-w-md mx-auto md:max-w-lg",
-    "calendar_view": {
-      "month": "Grid with Green/Gold dot indicators",
-      "week": "Horizontal Date Strip (Top) + Vertical Agenda List (Bottom) - NO BIG TILES"
-    }
-  },
-  "components": {
-    "buttons": {
-      "style": "pill",
-      "animation": "transform transition-transform active:scale-95"
+    "layout": {
+      "container": "max-w-md mx-auto md:max-w-lg px-4 md:px-0",
+      "spacing": {
+        "section": "space-y-8",
+        "item": "space-y-4"
+      }
     },
-    "cards": {
-      "style": "flat",
-      "border": "1px solid #E5E7EB",
-      "radius": "rounded-xl"
+    "motion": {
+      "page_transition": "animate-in fade-in slide-in-from-bottom-4 duration-500",
+      "list_stagger": "stagger-100",
+      "hover": "transition-all duration-300 ease-out"
     },
-    "inputs": {
-      "style": "minimal",
-      "focus": "ring-2 ring-emerald-500 ring-offset-2"
-    }
-  },
-  "image_urls": {
-    "hero_bg": "https://images.unsplash.com/photo-1759888107439-2b62433ef18b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxiZWF1dGlmdWwlMjBtb3NxdWUlMjBzaWxob3VldHRlJTIwc3Vuc2V0fGVufDB8fHx8MTc3MTIyMTcxN3ww&ixlib=rb-4.1.0&q=85",
-    "lantern_pattern": "https://images.unsplash.com/photo-1765878108610-1797ff4d5fef?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxyYW1hZGFuJTIwbGFudGVybiUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3NzEyMjE3MTB8MA&ixlib=rb-4.1.0&q=85",
-    "geometric_pattern": "https://images.unsplash.com/photo-1739478469686-b4aab237a38e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwzfHxpc2xhbWljJTIwZ2VvbWV0cmljJTIwcGF0dGVybiUyMGdvbGQlMjBncmVlbnxlbnwwfHx8fDE3NzEyMjE3MDl8MA&ixlib=rb-4.1.0&q=85"
-  },
-  "instructions_to_main_agent": [
-    "Install 'Outfit' font family if possible or use Google Fonts import.",
-    "Refactor 'Week View' to use a Vertical Agenda Layout. DO NOT use grid tiles for week view.",
-    "Implement 'Bulk Add' in Shopping List using a textarea that splits by newline.",
-    "Use 'react-day-picker' modifiers to show colored dots for events in Month View.",
-    "Ensure 'Green' (#047857) is strictly for HOSTING events.",
-    "Ensure 'Gold' (#D97706) is strictly for INVITED events.",
-    "Use 'Vaul' drawer for adding events/items on mobile.",
-    "Maintain the 'Warm Sand' background to avoid harsh white glare."
-  ],
-  "UNIVERSAL_GUIDELINES": {
-    "design_philosophy": "Functional Spirituality. Clean, legible, but warm.",
-    "motion": "Use subtle fade-ins (framer-motion) for page transitions. No bounce or excessive spring.",
-    "accessibility": "Ensure text contrast on Gold backgrounds is sufficient (use dark text on gold if needed)."
+    "assets": {
+      "icons": "Lucide React (Stroke width: 1.5px for elegance)",
+      "images": [
+        {
+          "category": "hero_background",
+          "url": "https://images.unsplash.com/photo-1684920382197-04e8eddaa5e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwyfHxlbGVnYW50JTIwbWluaW1hbGlzdCUyMHJhbWFkYW4lMjBsYW50ZXJuJTIwcGF0dGVybiUyMGJhY2tncm91bmQlMjB3aGl0ZSUyMGdvbGR8ZW58MHx8fHwxNzcxMjIyOTMxfDA&ixlib=rb-4.1.0&q=85",
+          "description": "Subtle elegant light fixture background, useful for hero section or cards background with overlay"
+        }
+      ]
+    },
+    "instructions_to_main_agent": {
+      "tailwind_config_update": "Update tailwind.config.js to extend the color palette with the new 'brand', 'host', and 'guest' colors. Add the specific font families.",
+      "css_update": "Update index.css to set the new CSS variables for --background, --foreground, --primary, etc. Ensure the font imports for Playfair Display and Outfit are present.",
+      "component_refactor": "Refactor existing components to use the new rounded-2xl, shadow-sm, and the new color utilities. Specifically check the 'Calendar' and 'Dashboard' pages to implement the Host/Guest distinction using the new 'status' colors.",
+      "navigation_update": "Update the bottom navigation to use the new glassmorphism style and active states (Active: Text-Brand-Primary + subtle bg).",
+      "accessibility": "Ensure all text combinations meet WCAG AA contrast (4.5:1). The new darker Host/Guest text colors are designed for this.",
+      "testing": "Add data-testid to all interactive elements."
+    },
+    "universal_guidelines": [
+      "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+      "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+      "Create depth through layered design elements with z-index hierarchy",
+      "Use glass-morphism effects with backdrop filters (12-24px blur)",
+      "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+      "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+      "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+      "NEVER: use AI assistant Emoji characters like 🤖🧠 etc for icons.",
+      "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+      "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+      "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+      "Main agent relies on these image URLs. Missing categories = main agent will use placeholder text which is FORBIDDEN"
+    ]
   }
 }

@@ -561,6 +561,27 @@ const CalendarPage = () => {
                                 {event.address || event.location}
                               </p>
                             )}
+                            {/* Guest count for hosting events */}
+                            {event.type === 'hosting' && event.guests && event.guests.length > 0 && (
+                              <div className="flex items-center gap-2 mt-2">
+                                <div className="flex items-center gap-1 text-xs bg-[#115E59]/10 text-[#115E59] px-2 py-1 rounded-full">
+                                  <Users className="w-3 h-3" />
+                                  <span>{event.guests.length} {t('calendar.guestCount')}</span>
+                                </div>
+                                {event.guests.filter(g => g.status === 'accepted').length > 0 && (
+                                  <div className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                    <UserCheck className="w-3 h-3" />
+                                    <span>{event.guests.filter(g => g.status === 'accepted').length}</span>
+                                  </div>
+                                )}
+                                {event.guests.filter(g => g.status === 'declined').length > 0 && (
+                                  <div className="flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                                    <UserX className="w-3 h-3" />
+                                    <span>{event.guests.filter(g => g.status === 'declined').length}</span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                           <div className="flex flex-col gap-1">
                             <button

@@ -14,7 +14,6 @@ const Dashboard = () => {
 
   const todayEvents = getEventsByDate(new Date());
 
-  // Calculate countdown to Iftar or Sahur
   useEffect(() => {
     if (!prayerTimes) return;
 
@@ -26,7 +25,6 @@ const Dashboard = () => {
       let targetTime = new Date();
       targetTime.setHours(maghribHour, maghribMin, 0, 0);
 
-      // If it's after Maghrib, countdown to next Fajr (Sahur)
       if (now > targetTime) {
         targetTime = new Date();
         targetTime.setDate(targetTime.getDate() + 1);
@@ -73,25 +71,25 @@ const Dashboard = () => {
 
   return (
     <motion.div
-      className="space-y-6 pb-24"
+      className="space-y-5 pb-24"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       data-testid="dashboard-page"
     >
-      {/* Header with hero image */}
+      {/* Header */}
       <motion.div 
         variants={itemVariants}
-        className="relative h-48 rounded-2xl overflow-hidden"
+        className="relative h-44 rounded-2xl overflow-hidden shadow-premium"
       >
         <img 
-          src="https://images.unsplash.com/photo-1759888107439-2b62433ef18b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwzfHxibHVlJTIwbW9zcXVlJTIwaXN0YW5idWwlMjBzdW5zZXQlMjBzaWxob3VldHRlfGVufDB8fHx8MTc3MTIyMDE3MHww&ixlib=rb-4.1.0&q=85"
-          alt="Mosque at sunset"
+          src="https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&auto=format&fit=crop&q=60"
+          alt="Mosque silhouette"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F4C5C]/90 via-[#0F4C5C]/40 to-transparent" />
         <div className="absolute bottom-4 left-4 right-4 text-white">
-          <h1 className="font-playfair text-3xl font-bold">{t('dashboard.title')}</h1>
+          <h1 className="font-playfair text-3xl font-semibold">{t('dashboard.title')}</h1>
           <div className="flex items-center gap-2 mt-1 text-white/80">
             <MapPin className="w-4 h-4" />
             <span className="text-sm">{selectedCity}</span>
@@ -101,27 +99,27 @@ const Dashboard = () => {
 
       {/* Countdown Card */}
       <motion.div variants={itemVariants}>
-        <Card className="bg-emerald-700 text-white border-0 shadow-lg" data-testid="countdown-card">
+        <Card className="bg-[#0F4C5C] text-white border-0 shadow-lg rounded-2xl" data-testid="countdown-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-emerald-100">
+            <CardTitle className="text-base font-medium text-teal-100">
               {isBeforeIftar ? t('dashboard.timeToIftar') : t('dashboard.timeToSahur')}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex justify-center gap-6" data-testid="countdown-display">
+            <div className="flex justify-center gap-4" data-testid="countdown-display">
               <div className="text-center">
-                <div className="text-5xl font-bold tabular-nums">{String(countdown.hours).padStart(2, '0')}</div>
-                <div className="text-sm text-emerald-200 mt-1">{t('dashboard.hours')}</div>
+                <div className="text-5xl font-semibold tabular-nums">{String(countdown.hours).padStart(2, '0')}</div>
+                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.hours')}</div>
               </div>
-              <div className="text-5xl font-bold">:</div>
+              <div className="text-4xl font-light text-teal-300">:</div>
               <div className="text-center">
-                <div className="text-5xl font-bold tabular-nums">{String(countdown.minutes).padStart(2, '0')}</div>
-                <div className="text-sm text-emerald-200 mt-1">{t('dashboard.minutes')}</div>
+                <div className="text-5xl font-semibold tabular-nums">{String(countdown.minutes).padStart(2, '0')}</div>
+                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.minutes')}</div>
               </div>
-              <div className="text-5xl font-bold">:</div>
+              <div className="text-4xl font-light text-teal-300">:</div>
               <div className="text-center">
-                <div className="text-5xl font-bold tabular-nums">{String(countdown.seconds).padStart(2, '0')}</div>
-                <div className="text-sm text-emerald-200 mt-1">{t('dashboard.seconds')}</div>
+                <div className="text-5xl font-semibold tabular-nums">{String(countdown.seconds).padStart(2, '0')}</div>
+                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.seconds')}</div>
               </div>
             </div>
           </CardContent>
@@ -130,16 +128,16 @@ const Dashboard = () => {
 
       {/* Prayer Times */}
       <motion.div variants={itemVariants}>
-        <Card className="border-stone-200" data-testid="prayer-times-card">
+        <Card className="border-stone-200/60 shadow-premium rounded-2xl" data-testid="prayer-times-card">
           <CardHeader className="pb-3">
-            <CardTitle className="font-playfair text-xl text-stone-800 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-emerald-600" />
+            <CardTitle className="font-playfair text-lg text-stone-800 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-[#0F4C5C]" />
               {t('dashboard.prayerTimes')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {prayerTimesLoading ? (
-              <div className="text-center py-4 text-stone-500">{t('common.loading')}</div>
+              <div className="text-center py-4 text-stone-400">{t('common.loading')}</div>
             ) : prayerTimes ? (
               <div className="grid grid-cols-5 gap-2">
                 {prayerList.map((prayer) => (
@@ -148,7 +146,7 @@ const Dashboard = () => {
                     className="text-center p-3 bg-stone-50 rounded-xl"
                     data-testid={`prayer-${prayer.key.toLowerCase()}`}
                   >
-                    <div className="flex justify-center mb-2 text-emerald-600">
+                    <div className="flex justify-center mb-2 text-[#0F4C5C]">
                       {prayer.icon}
                     </div>
                     <div className="text-xs text-stone-500 mb-1">{prayer.label}</div>
@@ -159,7 +157,7 @@ const Dashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-4 text-stone-500">{t('common.error')}</div>
+              <div className="text-center py-4 text-stone-400">{t('common.error')}</div>
             )}
           </CardContent>
         </Card>
@@ -167,42 +165,46 @@ const Dashboard = () => {
 
       {/* Today's Events */}
       <motion.div variants={itemVariants}>
-        <Card className="border-stone-200" data-testid="today-events-card">
+        <Card className="border-stone-200/60 shadow-premium rounded-2xl" data-testid="today-events-card">
           <CardHeader className="pb-3">
-            <CardTitle className="font-playfair text-xl text-stone-800 flex items-center gap-2">
-              <Users className="w-5 h-5 text-amber-600" />
+            <CardTitle className="font-playfair text-lg text-stone-800 flex items-center gap-2">
+              <Users className="w-5 h-5 text-[#C6A87C]" />
               {t('dashboard.todayEvents')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {todayEvents.length === 0 ? (
-              <p className="text-stone-500 text-center py-4">{t('dashboard.noEvents')}</p>
+              <p className="text-stone-400 text-center py-6">{t('dashboard.noEvents')}</p>
             ) : (
               <div className="space-y-3">
                 {todayEvents.map((event) => (
                   <div 
                     key={event.id}
-                    className={`p-4 rounded-xl ${
+                    className={`p-4 rounded-xl border-l-4 ${
                       event.type === 'hosting' 
-                        ? 'bg-emerald-50 border border-emerald-200' 
-                        : 'bg-amber-50 border border-amber-200'
+                        ? 'bg-[#F0FDFA] border-[#0F766E]' 
+                        : 'bg-[#FFFBEB] border-[#B45309]'
                     }`}
                     data-testid={`event-${event.id}`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <Badge 
-                          variant="secondary"
-                          className={event.type === 'hosting' 
-                            ? 'bg-emerald-600 text-white' 
-                            : 'bg-amber-600 text-white'
-                          }
+                          className={`text-xs font-medium ${
+                            event.type === 'hosting' 
+                              ? 'bg-[#0F766E] hover:bg-[#0F766E]' 
+                              : 'bg-[#B45309] hover:bg-[#B45309]'
+                          } text-white`}
                         >
                           {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
                         </Badge>
-                        <h3 className="font-semibold text-stone-800 mt-2">{event.name}</h3>
+                        <h3 className={`font-medium mt-2 ${
+                          event.type === 'hosting' ? 'text-[#115E59]' : 'text-[#92400E]'
+                        }`}>{event.name}</h3>
                         {event.location && (
-                          <p className="text-sm text-stone-500 flex items-center gap-1 mt-1">
+                          <p className={`text-sm flex items-center gap-1 mt-1 ${
+                            event.type === 'hosting' ? 'text-[#115E59]/70' : 'text-[#92400E]/70'
+                          }`}>
                             <MapPin className="w-3 h-3" /> {event.location}
                           </p>
                         )}

@@ -12,6 +12,15 @@ const sampleEvents = [
     location: '',
     notes: 'Iftar Dinner',
     menu: ['Linsensuppe', 'Pide', 'Baklava']
+  },
+  {
+    id: '2',
+    date: new Date().toISOString().split('T')[0],
+    type: 'invited',
+    name: 'Bei Familie Tork',
+    location: 'Lunen',
+    notes: 'Einladung zum Iftar',
+    menu: []
   }
 ];
 

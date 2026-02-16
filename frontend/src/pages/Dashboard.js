@@ -1,60 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Sun, Moon, Users, MapPin, Clock } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Users, MapPin, Calendar, Plus } from 'lucide-react';
 
 const Dashboard = () => {
-  const { t } = useTranslation();
-  const { prayerTimes, prayerTimesLoading, selectedCity, getEventsByDate } = useApp();
-  const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [isBeforeIftar, setIsBeforeIftar] = useState(true);
+  const { t, i18n } = useTranslation();
+  const { events, getEventsByDate, language } = useApp();
+
+  // Get user name from localStorage
+  const [userName, setUserName] = useState(() => {
+    return localStorage.getItem('userName') || '';
+  });
+
+  // Listen for changes in localStorage (when updated from Settings)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUserName(localStorage.getItem('userName') || '');
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check on focus (for same-tab updates)
+    const checkUserName = () => {
+      const stored = localStorage.getItem('userName') || '';
+      if (stored !== userName) {
+        setUserName(stored);
+      }
+    };
+    window.addEventListener('focus', checkUserName);
+
+    // Check periodically for same-tab updates
+    const interval = setInterval(checkUserName, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', checkUserName);
+      clearInterval(interval);
+    };
+  }, [userName]);
 
   const todayEvents = getEventsByDate(new Date());
 
-  useEffect(() => {
-    if (!prayerTimes) return;
+  // Get upcoming events (next 7 days)
+  const getUpcomingEvents = () => {
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
 
-    const calculateCountdown = () => {
-      const now = new Date();
-      const [maghribHour, maghribMin] = prayerTimes.Maghrib.split(':').map(Number);
-      const [fajrHour, fajrMin] = prayerTimes.Fajr.split(':').map(Number);
+    return events
+      .filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate >= today && eventDate <= nextWeek;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 5);
+  };
 
-      let targetTime = new Date();
-      targetTime.setHours(maghribHour, maghribMin, 0, 0);
+  const upcomingEvents = getUpcomingEvents();
 
-      if (now > targetTime) {
-        targetTime = new Date();
-        targetTime.setDate(targetTime.getDate() + 1);
-        targetTime.setHours(fajrHour, fajrMin, 0, 0);
-        setIsBeforeIftar(false);
-      } else {
-        setIsBeforeIftar(true);
-      }
-
-      const diff = targetTime - now;
-      if (diff > 0) {
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setCountdown({ hours, minutes, seconds });
-      }
-    };
-
-    calculateCountdown();
-    const interval = setInterval(calculateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [prayerTimes]);
-
-  const prayerList = [
-    { key: 'Fajr', icon: <Moon className="w-4 h-4" />, label: t('dashboard.fajr') },
-    { key: 'Dhuhr', icon: <Sun className="w-4 h-4" />, label: t('dashboard.dhuhr') },
-    { key: 'Asr', icon: <Sun className="w-4 h-4" />, label: t('dashboard.asr') },
-    { key: 'Maghrib', icon: <Moon className="w-4 h-4" />, label: t('dashboard.maghrib') },
-    { key: 'Isha', icon: <Moon className="w-4 h-4" />, label: t('dashboard.isha') }
-  ];
+  // Count statistics
+  const hostingCount = events.filter(e => e.type === 'hosting').length;
+  const invitedCount = events.filter(e => e.type === 'invited').length;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -69,6 +79,12 @@ const Dashboard = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const options = { weekday: 'short', day: 'numeric', month: 'short' };
+    return date.toLocaleDateString(language === 'de' ? 'de-DE' : 'tr-TR', options);
+  };
+
   return (
     <motion.div
       className="space-y-5 pb-24"
@@ -78,11 +94,11 @@ const Dashboard = () => {
       data-testid="dashboard-page"
     >
       {/* Header */}
-      <motion.div 
+      <motion.div
         variants={itemVariants}
         className="relative h-44 rounded-2xl overflow-hidden shadow-premium"
       >
-        <img 
+        <img
           src="https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&auto=format&fit=crop&q=60"
           alt="Mosque silhouette"
           className="w-full h-full object-cover"
@@ -90,75 +106,32 @@ const Dashboard = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F4C5C]/90 via-[#0F4C5C]/40 to-transparent" />
         <div className="absolute bottom-4 left-4 right-4 text-white">
           <h1 className="font-playfair text-3xl font-semibold">{t('dashboard.title')}</h1>
-          <div className="flex items-center gap-2 mt-1 text-white/80">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">{selectedCity}</span>
-          </div>
+          {userName ? (
+            <p className="text-white/90 text-sm mt-1 font-medium">{userName}</p>
+          ) : (
+            <p className="text-white/80 text-sm mt-1">
+              {language === 'de' ? 'Deine Besuche & Einladungen' : 'Ziyaretlerin & Davetlerin'}
+            </p>
+          )}
         </div>
       </motion.div>
 
-      {/* Countdown Card */}
-      <motion.div variants={itemVariants}>
-        <Card className="bg-[#0F4C5C] text-white border-0 shadow-lg rounded-2xl" data-testid="countdown-card">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium text-teal-100">
-              {isBeforeIftar ? t('dashboard.timeToIftar') : t('dashboard.timeToSahur')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-center gap-4" data-testid="countdown-display">
-              <div className="text-center">
-                <div className="text-5xl font-semibold tabular-nums">{String(countdown.hours).padStart(2, '0')}</div>
-                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.hours')}</div>
-              </div>
-              <div className="text-4xl font-light text-teal-300">:</div>
-              <div className="text-center">
-                <div className="text-5xl font-semibold tabular-nums">{String(countdown.minutes).padStart(2, '0')}</div>
-                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.minutes')}</div>
-              </div>
-              <div className="text-4xl font-light text-teal-300">:</div>
-              <div className="text-center">
-                <div className="text-5xl font-semibold tabular-nums">{String(countdown.seconds).padStart(2, '0')}</div>
-                <div className="text-xs text-teal-200 mt-1 uppercase tracking-wider">{t('dashboard.seconds')}</div>
-              </div>
+      {/* Quick Stats */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3">
+        <Card className="bg-[#F0FDFA] border-[#0F766E]/20 shadow-sm rounded-2xl">
+          <CardContent className="p-4 text-center">
+            <div className="text-3xl font-bold text-[#0F766E]">{hostingCount}</div>
+            <div className="text-sm text-[#0F766E]/70 mt-1">
+              {language === 'de' ? 'Besuche' : 'Ziyaretler'}
             </div>
           </CardContent>
         </Card>
-      </motion.div>
-
-      {/* Prayer Times */}
-      <motion.div variants={itemVariants}>
-        <Card className="border-stone-200/60 shadow-premium rounded-2xl" data-testid="prayer-times-card">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-playfair text-lg text-stone-800 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#0F4C5C]" />
-              {t('dashboard.prayerTimes')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {prayerTimesLoading ? (
-              <div className="text-center py-4 text-stone-400">{t('common.loading')}</div>
-            ) : prayerTimes ? (
-              <div className="grid grid-cols-5 gap-2">
-                {prayerList.map((prayer) => (
-                  <div 
-                    key={prayer.key}
-                    className="text-center p-3 bg-stone-50 rounded-xl"
-                    data-testid={`prayer-${prayer.key.toLowerCase()}`}
-                  >
-                    <div className="flex justify-center mb-2 text-[#0F4C5C]">
-                      {prayer.icon}
-                    </div>
-                    <div className="text-xs text-stone-500 mb-1">{prayer.label}</div>
-                    <div className="font-semibold text-stone-800 tabular-nums">
-                      {prayerTimes[prayer.key]}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-4 text-stone-400">{t('common.error')}</div>
-            )}
+        <Card className="bg-[#FFFBEB] border-[#B45309]/20 shadow-sm rounded-2xl">
+          <CardContent className="p-4 text-center">
+            <div className="text-3xl font-bold text-[#B45309]">{invitedCount}</div>
+            <div className="text-sm text-[#B45309]/70 mt-1">
+              {language === 'de' ? 'Einladungen' : 'Davetler'}
+            </div>
           </CardContent>
         </Card>
       </motion.div>
@@ -174,25 +147,33 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             {todayEvents.length === 0 ? (
-              <p className="text-stone-400 text-center py-6">{t('dashboard.noEvents')}</p>
+              <div className="text-center py-6">
+                <p className="text-stone-400 mb-4">{t('dashboard.noEvents')}</p>
+                <Link to="/calendar">
+                  <Button className="bg-[#0F4C5C] hover:bg-[#0F4C5C]/90">
+                    <Plus className="w-4 h-4 mr-2" />
+                    {language === 'de' ? 'Termin hinzufugen' : 'Etkinlik ekle'}
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <div className="space-y-3">
                 {todayEvents.map((event) => (
-                  <div 
+                  <div
                     key={event.id}
                     className={`p-4 rounded-xl border-l-4 ${
-                      event.type === 'hosting' 
-                        ? 'bg-[#F0FDFA] border-[#0F766E]' 
+                      event.type === 'hosting'
+                        ? 'bg-[#F0FDFA] border-[#0F766E]'
                         : 'bg-[#FFFBEB] border-[#B45309]'
                     }`}
                     data-testid={`event-${event.id}`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <Badge 
+                        <Badge
                           className={`text-xs font-medium ${
-                            event.type === 'hosting' 
-                              ? 'bg-[#0F766E] hover:bg-[#0F766E]' 
+                            event.type === 'hosting'
+                              ? 'bg-[#0F766E] hover:bg-[#0F766E]'
                               : 'bg-[#B45309] hover:bg-[#B45309]'
                           } text-white`}
                         >
@@ -201,6 +182,13 @@ const Dashboard = () => {
                         <h3 className={`font-medium mt-2 ${
                           event.type === 'hosting' ? 'text-[#115E59]' : 'text-[#92400E]'
                         }`}>{event.name}</h3>
+                        {event.time && (
+                          <p className={`text-sm mt-1 ${
+                            event.type === 'hosting' ? 'text-[#115E59]/70' : 'text-[#92400E]/70'
+                          }`}>
+                            {event.time} Uhr
+                          </p>
+                        )}
                         {event.location && (
                           <p className={`text-sm flex items-center gap-1 mt-1 ${
                             event.type === 'hosting' ? 'text-[#115E59]/70' : 'text-[#92400E]/70'
@@ -210,6 +198,57 @@ const Dashboard = () => {
                         )}
                       </div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Upcoming Events */}
+      <motion.div variants={itemVariants}>
+        <Card className="border-stone-200/60 shadow-premium rounded-2xl" data-testid="upcoming-events-card">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <CardTitle className="font-playfair text-lg text-stone-800 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-[#0F4C5C]" />
+              {language === 'de' ? 'Kommende Termine' : 'Yaklasan Etkinlikler'}
+            </CardTitle>
+            <Link to="/calendar">
+              <Button variant="ghost" size="sm" className="text-[#0F4C5C]">
+                {language === 'de' ? 'Alle' : 'Tumu'}
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {upcomingEvents.length === 0 ? (
+              <p className="text-stone-400 text-center py-4">
+                {language === 'de' ? 'Keine kommenden Termine' : 'Yaklasan etkinlik yok'}
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {upcomingEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex items-center gap-3 p-3 bg-stone-50 rounded-xl"
+                  >
+                    <div className={`w-2 h-10 rounded-full ${
+                      event.type === 'hosting' ? 'bg-[#0F766E]' : 'bg-[#B45309]'
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-stone-800 truncate">{event.name}</p>
+                      <p className="text-sm text-stone-500">{formatDate(event.date)}</p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs shrink-0 ${
+                        event.type === 'hosting'
+                          ? 'border-[#0F766E] text-[#0F766E]'
+                          : 'border-[#B45309] text-[#B45309]'
+                      }`}
+                    >
+                      {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
+                    </Badge>
                   </div>
                 ))}
               </div>

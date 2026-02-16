@@ -1,28 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
 // Initial sample data
-const sampleEvents = [
-  {
-    id: '1',
-    date: new Date().toISOString().split('T')[0],
-    type: 'hosting',
-    name: 'Familie Yilmaz',
-    location: '',
-    notes: 'Iftar Dinner',
-    menu: ['Linsensuppe', 'Pide', 'Baklava']
-  },
-  {
-    id: '2',
-    date: new Date().toISOString().split('T')[0],
-    type: 'invited',
-    name: 'Bei Familie Tork',
-    location: 'Lunen',
-    notes: 'Einladung zum Iftar',
-    menu: []
-  }
-];
+const sampleEvents = [];
 
 const sampleRecipes = [
   {
@@ -44,7 +25,7 @@ const sampleRecipes = [
     nameTR: 'Baklava',
     category: 'dessert',
     prepTime: 90,
-    image: 'https://images.unsplash.com/photo-1761828122856-8703baac8e86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA8Mzl8MHwxfHNlYXJjaHwyfHxiYWtsYXZhJTIwZGVzc2VydCUyMHBpc3RhY2hpb3xlbnwwfHx8fDE3NzEyMjAxNjd8MA&ixlib=rb-4.1.0&q=85',
+    image: 'https://images.unsplash.com/photo-1761828122856-8703baac8e86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwyfHxiYWtsYXZhJTIwZGVzc2VydCUyMHBpc3RhY2hpb3xlbnwwfHx8fDE3NzEyMjAxNjd8MA&ixlib=rb-4.1.0&q=85',
     ingredients: ['Filoteig', 'Pistazien', 'Butter', 'Zucker', 'Wasser'],
     instructions: 'Schichten, backen und mit Sirup ubergießen.',
     isFavorite: true
@@ -61,14 +42,6 @@ export const AppProvider = ({ children }) => {
   // Language state
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem('language') || 'de';
-  });
-
-  // City and country state
-  const [selectedCity, setSelectedCity] = useState(() => {
-    return localStorage.getItem('selectedCity') || 'Berlin';
-  });
-  const [selectedCountry, setSelectedCountry] = useState(() => {
-    return localStorage.getItem('selectedCountry') || 'Germany';
   });
 
   // Events state
@@ -89,23 +62,10 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : sampleShoppingItems;
   });
 
-  // Prayer times state
-  const [prayerTimes, setPrayerTimes] = useState(null);
-  const [prayerTimesLoading, setPrayerTimesLoading] = useState(true);
-  const [prayerTimesTimezone, setPrayerTimesTimezone] = useState('Europe/Berlin');
-
   // Save to localStorage when state changes
   useEffect(() => {
     localStorage.setItem('language', language);
   }, [language]);
-
-  useEffect(() => {
-    localStorage.setItem('selectedCity', selectedCity);
-  }, [selectedCity]);
-
-  useEffect(() => {
-    localStorage.setItem('selectedCountry', selectedCountry);
-  }, [selectedCountry]);
 
   useEffect(() => {
     localStorage.setItem('events', JSON.stringify(events));
@@ -119,43 +79,6 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('shoppingItems', JSON.stringify(shoppingItems));
   }, [shoppingItems]);
 
-  // Fetch prayer times from Aladhan API with correct timezone
-  const fetchPrayerTimes = useCallback(async () => {
-    setPrayerTimesLoading(true);
-    try {
-      const today = new Date();
-      const day = today.getDate();
-      const month = today.getMonth() + 1;
-      const year = today.getFullYear();
-      
-      // Determine timezone based on country
-      const timezone = selectedCountry === 'Germany' ? 'Europe/Berlin' : 'Europe/Istanbul';
-      
-      // Use Diyanet method (13) for both countries - most trusted source for Muslims
-      // Diyanet calculates prayer times for all cities worldwide
-      const method = 13;
-      
-      const response = await fetch(
-        `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}?city=${encodeURIComponent(selectedCity)}&country=${selectedCountry}&method=${method}&timezonestring=${timezone}`
-      );
-      const data = await response.json();
-      
-      if (data.code === 200) {
-        setPrayerTimes(data.data.timings);
-        // Store timezone info for countdown calculations
-        setPrayerTimesTimezone(timezone);
-      }
-    } catch (error) {
-      console.error('Error fetching prayer times:', error);
-    } finally {
-      setPrayerTimesLoading(false);
-    }
-  }, [selectedCity, selectedCountry]);
-
-  useEffect(() => {
-    fetchPrayerTimes();
-  }, [fetchPrayerTimes]);
-
   // Event functions
   const addEvent = (event) => {
     const newEvent = {
@@ -166,7 +89,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateEvent = (id, updatedEvent) => {
-    setEvents(prev => prev.map(event => 
+    setEvents(prev => prev.map(event =>
       event.id === id ? { ...event, ...updatedEvent } : event
     ));
   };
@@ -176,7 +99,16 @@ export const AppProvider = ({ children }) => {
   };
 
   const getEventsByDate = (date) => {
-    const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+    let dateStr;
+    if (typeof date === 'string') {
+      dateStr = date;
+    } else {
+      // Use local date format to avoid timezone issues
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      dateStr = `${year}-${month}-${day}`;
+    }
     return events.filter(event => event.date === dateStr);
   };
 
@@ -190,7 +122,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateRecipe = (id, updatedRecipe) => {
-    setRecipes(prev => prev.map(recipe => 
+    setRecipes(prev => prev.map(recipe =>
       recipe.id === id ? { ...recipe, ...updatedRecipe } : recipe
     ));
   };
@@ -200,7 +132,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const toggleFavorite = (id) => {
-    setRecipes(prev => prev.map(recipe => 
+    setRecipes(prev => prev.map(recipe =>
       recipe.id === id ? { ...recipe, isFavorite: !recipe.isFavorite } : recipe
     ));
   };
@@ -216,7 +148,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateShoppingItem = (id, updatedItem) => {
-    setShoppingItems(prev => prev.map(item => 
+    setShoppingItems(prev => prev.map(item =>
       item.id === id ? { ...item, ...updatedItem } : item
     ));
   };
@@ -226,7 +158,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const toggleShoppingItem = (id) => {
-    setShoppingItems(prev => prev.map(item => 
+    setShoppingItems(prev => prev.map(item =>
       item.id === id ? { ...item, completed: !item.completed } : item
     ));
   };
@@ -239,16 +171,6 @@ export const AppProvider = ({ children }) => {
     // Language
     language,
     setLanguage,
-    // Location
-    selectedCity,
-    setSelectedCity,
-    selectedCountry,
-    setSelectedCountry,
-    // Prayer times
-    prayerTimes,
-    prayerTimesLoading,
-    prayerTimesTimezone,
-    fetchPrayerTimes,
     // Events
     events,
     addEvent,

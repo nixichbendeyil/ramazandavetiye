@@ -237,10 +237,4 @@ const ShoppingList = () => {
   );
 };
 
-// Fix: Add language to component
-const ShoppingListWrapper = () => {
-  const { language } = require('../contexts/AppContext').useApp();
-  return <ShoppingList language={language} />;
-};
-
 export default ShoppingList;

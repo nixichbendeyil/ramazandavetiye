@@ -25,7 +25,7 @@ const Navigation = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-200 z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b" data-testid="main-navigation">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex justify-around py-2 md:py-3">
           {navItems.map((item) => (
             <NavLink

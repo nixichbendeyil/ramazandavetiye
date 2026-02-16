@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../contexts/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-// Tabs removed - using custom buttons
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Plus, Calendar as CalendarIcon, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Users, MapPin, Trash2, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, getDay, isSameMonth } from 'date-fns';
 import { de, tr } from 'date-fns/locale';
 
@@ -35,7 +34,6 @@ const CalendarPage = () => {
   const locale = language === 'de' ? de : tr;
   const selectedDateEvents = getEventsByDate(selectedDate);
 
-  // Get events for a specific date
   const getEventsForDay = (date) => {
     return events.filter(event => {
       const eventDate = new Date(event.date);
@@ -49,15 +47,13 @@ const CalendarPage = () => {
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
     
-    // Add padding days from previous month
     const startDay = getDay(start);
-    const paddingStart = startDay === 0 ? 6 : startDay - 1; // Monday = 0
+    const paddingStart = startDay === 0 ? 6 : startDay - 1;
     const prevMonthDays = [];
     for (let i = paddingStart - 1; i >= 0; i--) {
       prevMonthDays.push(addDays(start, -(i + 1)));
     }
     
-    // Add padding days from next month
     const totalDays = prevMonthDays.length + days.length;
     const paddingEnd = totalDays % 7 === 0 ? 0 : 7 - (totalDays % 7);
     const nextMonthDays = [];
@@ -72,21 +68,23 @@ const CalendarPage = () => {
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
+  // Get all events for the current week
+  const weekEvents = weekDays.flatMap(day => 
+    getEventsForDay(day).map(event => ({ ...event, dayDate: day }))
+  ).sort((a, b) => new Date(a.date) - new Date(b.date));
+
   const handleAddEvent = () => {
     if (!newEvent.name.trim()) return;
-    
     addEvent({
       ...newEvent,
       date: selectedDate.toISOString().split('T')[0]
     });
-    
     setNewEvent({ name: '', type: 'hosting', location: '', notes: '', menu: [] });
     setIsAddDialogOpen(false);
   };
 
   const handleEditEvent = () => {
     if (!editingEvent || !editingEvent.name.trim()) return;
-    
     updateEvent(editingEvent.id, editingEvent);
     setEditingEvent(null);
     setIsEditDialogOpen(false);
@@ -109,367 +107,259 @@ const CalendarPage = () => {
   const calendarDays = generateCalendarDays();
   const weekDayNames = language === 'de' 
     ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-    : ['Pzt', 'Sal', 'Car', 'Per', 'Cum', 'Cmt', 'Paz'];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
-  };
+    : ['Pt', 'Sa', 'Ca', 'Pe', 'Cu', 'Ct', 'Pa'];
 
   return (
     <motion.div
-      className="space-y-6 pb-24"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      className="space-y-4 pb-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       data-testid="calendar-page"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <h1 className="font-playfair text-2xl font-bold text-stone-800">
+      <div className="flex items-center justify-between">
+        <h1 className="font-playfair text-2xl font-bold text-gray-900">
           {t('calendar.title')}
         </h1>
-        <div className="flex gap-2">
-          <Button
-            variant={viewMode === 'month' ? 'default' : 'outline'}
-            size="sm"
+        <div className="flex gap-1 bg-gray-100 p-1 rounded-full">
+          <button
             onClick={() => setViewMode('month')}
-            className={viewMode === 'month' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+            className={`px-4 py-1.5 text-sm font-medium rounded-full transition-all ${
+              viewMode === 'month' 
+                ? 'bg-emerald-600 text-white shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
             data-testid="month-view-btn"
           >
             {t('calendar.monthView')}
-          </Button>
-          <Button
-            variant={viewMode === 'week' ? 'default' : 'outline'}
-            size="sm"
+          </button>
+          <button
             onClick={() => setViewMode('week')}
-            className={viewMode === 'week' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+            className={`px-4 py-1.5 text-sm font-medium rounded-full transition-all ${
+              viewMode === 'week' 
+                ? 'bg-emerald-600 text-white shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
             data-testid="week-view-btn"
           >
             {t('calendar.weekView')}
-          </Button>
+          </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Main Content - Two Column Layout on Desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar View - Takes 2 columns on desktop */}
-        <div className="lg:col-span-2">
-          {/* Month View */}
-          {viewMode === 'month' && (
-            <motion.div 
-              variants={itemVariants}
-              key="month-view"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Card className="border-stone-200" data-testid="month-calendar">
-                <CardContent className="p-6">
-                  {/* Month Navigation */}
-                  <div className="flex items-center justify-between mb-6">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigateMonth('prev')}
-                      className="hover:bg-stone-100"
-                      data-testid="prev-month-btn"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </Button>
-                    <h2 className="font-playfair text-xl font-semibold text-stone-800">
-                      {format(currentMonth, 'MMMM yyyy', { locale })}
-                    </h2>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigateMonth('next')}
-                      className="hover:bg-stone-100"
-                      data-testid="next-month-btn"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </Button>
-                  </div>
-
-                  {/* Weekday Headers */}
-                  <div className="grid grid-cols-7 gap-1 mb-2">
-                    {weekDayNames.map((day) => (
-                      <div
-                        key={day}
-                        className="text-center text-sm font-medium text-stone-500 py-2"
-                      >
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {calendarDays.map((day, index) => {
-                      const dayEvents = getEventsForDay(day);
-                      const isSelected = isSameDay(day, selectedDate);
-                      const isToday = isSameDay(day, new Date());
-                      const isCurrentMonth = isSameMonth(day, currentMonth);
-                      const hasHosting = dayEvents.some(e => e.type === 'hosting');
-                      const hasInvited = dayEvents.some(e => e.type === 'invited');
-
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => setSelectedDate(day)}
-                          className={`
-                            relative min-h-[80px] p-2 rounded-xl text-left transition-all
-                            ${isSelected 
-                              ? 'bg-emerald-600 text-white shadow-lg' 
-                              : isToday 
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : hasHosting
-                                  ? 'bg-emerald-50 hover:bg-emerald-100'
-                                  : hasInvited
-                                    ? 'bg-amber-50 hover:bg-amber-100'
-                                    : isCurrentMonth
-                                      ? 'hover:bg-stone-100 text-stone-800'
-                                      : 'text-stone-300 hover:bg-stone-50'
-                            }
-                          `}
-                          data-testid={`calendar-day-${format(day, 'yyyy-MM-dd')}`}
-                        >
-                          <span className={`text-sm font-medium ${!isCurrentMonth && !isSelected ? 'opacity-40' : ''}`}>
-                            {format(day, 'd')}
-                          </span>
-                          {dayEvents.length > 0 && isCurrentMonth && (
-                            <div className="mt-1 space-y-1">
-                              {dayEvents.slice(0, 2).map((event) => (
-                                <div
-                                  key={event.id}
-                                  className={`
-                                    text-xs truncate px-1.5 py-0.5 rounded
-                                    ${isSelected 
-                                      ? 'bg-white/20 text-white' 
-                                      : event.type === 'hosting' 
-                                        ? 'bg-emerald-200 text-emerald-800' 
-                                        : 'bg-amber-200 text-amber-800'
-                                    }
-                                  `}
-                                >
-                                  {event.name}
-                                </div>
-                              ))}
-                              {dayEvents.length > 2 && (
-                                <div className={`text-xs ${isSelected ? 'text-white/70' : 'text-stone-500'}`}>
-                                  +{dayEvents.length - 2} {language === 'de' ? 'mehr' : 'daha'}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Week View */}
-          {viewMode === 'week' && (
-            <motion.div 
-              variants={itemVariants}
-              key="week-view"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Card className="border-stone-200" data-testid="week-calendar">
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-7 gap-3">
-                    {weekDays.map((day) => {
-                      const dayEvents = getEventsForDay(day);
-                      const isSelected = isSameDay(day, selectedDate);
-                      const isToday = isSameDay(day, new Date());
-
-                      return (
-                        <button
-                          key={day.toISOString()}
-                          onClick={() => setSelectedDate(day)}
-                          className={`p-4 rounded-xl text-center transition-all min-h-[200px] flex flex-col ${
-                            isSelected
-                              ? 'bg-emerald-600 text-white shadow-lg'
-                              : isToday
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'hover:bg-stone-100 border border-stone-200'
-                          }`}
-                          data-testid={`week-day-${format(day, 'yyyy-MM-dd')}`}
-                        >
-                          <div className="text-xs opacity-70 mb-1">
-                            {format(day, 'EEE', { locale })}
-                          </div>
-                          <div className="text-2xl font-semibold mb-3">
-                            {format(day, 'd')}
-                          </div>
-                          <div className="flex-1 space-y-2">
-                            {dayEvents.map((event) => (
-                              <div
-                                key={event.id}
-                                className={`text-xs p-2 rounded-lg text-left ${
-                                  isSelected
-                                    ? 'bg-white/20'
-                                    : event.type === 'hosting'
-                                      ? 'bg-emerald-100 text-emerald-800'
-                                      : 'bg-amber-100 text-amber-800'
-                                }`}
-                              >
-                                <div className="font-medium truncate">{event.name}</div>
-                                {event.location && (
-                                  <div className="truncate opacity-70 mt-0.5">{event.location}</div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Selected Date Events - Right Sidebar */}
-        <div className="lg:col-span-1">
-          <motion.div variants={itemVariants}>
-            <Card className="border-stone-200 sticky top-24" data-testid="selected-date-events">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="font-playfair text-lg text-stone-800 flex items-center gap-2">
-                    <CalendarIcon className="w-5 h-5 text-emerald-600" />
-                    <span className="truncate">{format(selectedDate, 'PPP', { locale })}</span>
-                  </CardTitle>
+      <AnimatePresence mode="wait">
+        {/* Month View */}
+        {viewMode === 'month' && (
+          <motion.div
+            key="month"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="space-y-4"
+          >
+            <Card className="border-gray-200 shadow-sm" data-testid="month-calendar">
+              <CardContent className="p-4">
+                {/* Month Navigation */}
+                <div className="flex items-center justify-between mb-4">
+                  <button
+                    onClick={() => navigateMonth('prev')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    data-testid="prev-month-btn"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <h2 className="font-playfair text-lg font-semibold text-gray-900">
+                    {format(currentMonth, 'MMMM yyyy', { locale })}
+                  </h2>
+                  <button
+                    onClick={() => navigateMonth('next')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    data-testid="next-month-btn"
+                  >
+                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                  </button>
                 </div>
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="sm"
-                      className="w-full mt-3 bg-emerald-600 hover:bg-emerald-700"
-                      data-testid="add-event-btn"
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      {t('calendar.addEvent')}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent data-testid="add-event-dialog">
-                    <DialogHeader>
-                      <DialogTitle className="font-playfair">{t('calendar.addEvent')}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 pt-4">
-                      <div>
-                        <Label>{t('calendar.guestName')}</Label>
-                        <Input
-                          value={newEvent.name}
-                          onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-                          placeholder="z.B. Familie Yilmaz"
-                          data-testid="event-name-input"
-                        />
-                      </div>
-                      <div>
-                        <Label>{t('calendar.eventType')}</Label>
-                        <Select
-                          value={newEvent.type}
-                          onValueChange={(value) => setNewEvent({ ...newEvent, type: value })}
-                        >
-                          <SelectTrigger data-testid="event-type-select">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="hosting">{t('calendar.hosting')}</SelectItem>
-                            <SelectItem value="invited">{t('calendar.invited')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>{t('calendar.location')}</Label>
-                        <Input
-                          value={newEvent.location}
-                          onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                          placeholder={t('calendar.location')}
-                          data-testid="event-location-input"
-                        />
-                      </div>
-                      <div>
-                        <Label>{t('calendar.notes')}</Label>
-                        <Textarea
-                          value={newEvent.notes}
-                          onChange={(e) => setNewEvent({ ...newEvent, notes: e.target.value })}
-                          placeholder={t('calendar.notes')}
-                          data-testid="event-notes-input"
-                        />
-                      </div>
-                      <Button
-                        onClick={handleAddEvent}
-                        className="w-full bg-emerald-600 hover:bg-emerald-700"
-                        data-testid="save-event-btn"
-                      >
-                        {t('calendar.save')}
-                      </Button>
+
+                {/* Weekday Headers */}
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                  {weekDayNames.map((day) => (
+                    <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
+                      {day}
                     </div>
-                  </DialogContent>
-                </Dialog>
-              </CardHeader>
-              <CardContent>
+                  ))}
+                </div>
+
+                {/* Calendar Grid - Compact for Mobile */}
+                <div className="grid grid-cols-7 gap-1">
+                  {calendarDays.map((day, index) => {
+                    const dayEvents = getEventsForDay(day);
+                    const isSelected = isSameDay(day, selectedDate);
+                    const isToday = isSameDay(day, new Date());
+                    const isCurrentMonth = isSameMonth(day, currentMonth);
+                    const hasHosting = dayEvents.some(e => e.type === 'hosting');
+                    const hasInvited = dayEvents.some(e => e.type === 'invited');
+
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedDate(day)}
+                        className={`
+                          relative aspect-square flex flex-col items-center justify-center rounded-lg transition-all
+                          ${isSelected 
+                            ? 'bg-emerald-600 text-white' 
+                            : isToday 
+                              ? 'bg-emerald-100 text-emerald-800 font-semibold'
+                              : isCurrentMonth
+                                ? 'hover:bg-gray-100 text-gray-800'
+                                : 'text-gray-300'
+                          }
+                        `}
+                        data-testid={`calendar-day-${format(day, 'yyyy-MM-dd')}`}
+                      >
+                        <span className="text-sm">{format(day, 'd')}</span>
+                        {/* Event Dots - Clear Color Distinction */}
+                        {dayEvents.length > 0 && isCurrentMonth && (
+                          <div className="flex gap-0.5 mt-0.5">
+                            {hasHosting && (
+                              <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-emerald-600'}`} />
+                            )}
+                            {hasInvited && (
+                              <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-amber-300' : 'bg-amber-500'}`} />
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                    <span className="text-xs text-gray-600">{t('calendar.hosting')}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
+                    <span className="text-xs text-gray-600">{t('calendar.invited')}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Selected Date Events */}
+            <Card className="border-gray-200 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-gray-900">
+                    {format(selectedDate, 'EEEE, d. MMMM', { locale })}
+                  </h3>
+                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-8 px-3" data-testid="add-event-btn">
+                        <Plus className="w-4 h-4 mr-1" />
+                        {t('calendar.addEvent')}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent data-testid="add-event-dialog">
+                      <DialogHeader>
+                        <DialogTitle className="font-playfair">{t('calendar.addEvent')}</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-4">
+                        <div>
+                          <Label>{t('calendar.guestName')}</Label>
+                          <Input
+                            value={newEvent.name}
+                            onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+                            placeholder="z.B. Familie Yilmaz"
+                            data-testid="event-name-input"
+                          />
+                        </div>
+                        <div>
+                          <Label>{t('calendar.eventType')}</Label>
+                          <Select value={newEvent.type} onValueChange={(value) => setNewEvent({ ...newEvent, type: value })}>
+                            <SelectTrigger data-testid="event-type-select">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="hosting">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                                  {t('calendar.hosting')}
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="invited">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-3 h-3 rounded-full bg-amber-500" />
+                                  {t('calendar.invited')}
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>{t('calendar.location')}</Label>
+                          <Input
+                            value={newEvent.location}
+                            onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                            placeholder={t('calendar.location')}
+                            data-testid="event-location-input"
+                          />
+                        </div>
+                        <div>
+                          <Label>{t('calendar.notes')}</Label>
+                          <Textarea
+                            value={newEvent.notes}
+                            onChange={(e) => setNewEvent({ ...newEvent, notes: e.target.value })}
+                            placeholder={t('calendar.notes')}
+                            data-testid="event-notes-input"
+                          />
+                        </div>
+                        <Button onClick={handleAddEvent} className="w-full bg-emerald-600 hover:bg-emerald-700" data-testid="save-event-btn">
+                          {t('calendar.save')}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
                 {selectedDateEvents.length === 0 ? (
-                  <p className="text-stone-500 text-center py-6">{t('calendar.noEvents')}</p>
+                  <p className="text-gray-500 text-center py-6 text-sm">{t('calendar.noEvents')}</p>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {selectedDateEvents.map((event) => (
                       <div
                         key={event.id}
-                        className={`p-4 rounded-xl border ${
+                        className={`p-3 rounded-lg border-l-4 ${
                           event.type === 'hosting'
-                            ? 'bg-emerald-50 border-emerald-200'
-                            : 'bg-amber-50 border-amber-200'
+                            ? 'bg-emerald-50 border-emerald-600'
+                            : 'bg-amber-50 border-amber-500'
                         }`}
                         data-testid={`calendar-event-${event.id}`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
-                            <Badge
-                              className={
-                                event.type === 'hosting'
-                                  ? 'bg-emerald-600 text-white'
-                                  : 'bg-amber-600 text-white'
-                              }
-                            >
+                            <Badge className={`text-xs ${event.type === 'hosting' ? 'bg-emerald-600' : 'bg-amber-500'} text-white`}>
                               {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
                             </Badge>
-                            <h3 className="font-semibold text-stone-800 mt-2 flex items-center gap-2">
-                              <Users className="w-4 h-4 flex-shrink-0" />
+                            <h4 className="font-medium text-gray-900 mt-1 flex items-center gap-1.5">
+                              <Users className="w-3.5 h-3.5 flex-shrink-0" />
                               <span className="truncate">{event.name}</span>
-                            </h3>
+                            </h4>
                             {event.location && (
-                              <p className="text-sm text-stone-600 flex items-center gap-1 mt-1">
-                                <MapPin className="w-3 h-3 flex-shrink-0" />
-                                <span className="truncate">{event.location}</span>
+                              <p className="text-xs text-gray-600 flex items-center gap-1 mt-0.5">
+                                <MapPin className="w-3 h-3" />
+                                {event.location}
                               </p>
                             )}
-                            {event.notes && (
-                              <p className="text-sm text-stone-500 mt-2 line-clamp-2">{event.notes}</p>
-                            )}
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
+                          <button
                             onClick={() => openEditDialog(event)}
-                            className="flex-shrink-0"
+                            className="p-1.5 hover:bg-white/50 rounded-lg transition-colors"
                             data-testid={`edit-event-${event.id}`}
                           >
-                            <Edit2 className="w-4 h-4 text-stone-500" />
-                          </Button>
+                            <Edit2 className="w-4 h-4 text-gray-500" />
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -478,8 +368,175 @@ const CalendarPage = () => {
               </CardContent>
             </Card>
           </motion.div>
-        </div>
-      </div>
+        )}
+
+        {/* Week View - Vertical Agenda Layout */}
+        {viewMode === 'week' && (
+          <motion.div
+            key="week"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-4"
+          >
+            {/* Horizontal Date Strip */}
+            <Card className="border-gray-200 shadow-sm">
+              <CardContent className="p-3">
+                <div className="flex justify-between">
+                  {weekDays.map((day) => {
+                    const isSelected = isSameDay(day, selectedDate);
+                    const isToday = isSameDay(day, new Date());
+                    const dayEvents = getEventsForDay(day);
+                    const hasHosting = dayEvents.some(e => e.type === 'hosting');
+                    const hasInvited = dayEvents.some(e => e.type === 'invited');
+
+                    return (
+                      <button
+                        key={day.toISOString()}
+                        onClick={() => setSelectedDate(day)}
+                        className={`flex flex-col items-center py-2 px-2 rounded-xl transition-all ${
+                          isSelected
+                            ? 'bg-emerald-600 text-white'
+                            : isToday
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'hover:bg-gray-100'
+                        }`}
+                        data-testid={`week-day-${format(day, 'yyyy-MM-dd')}`}
+                      >
+                        <span className="text-xs opacity-70">{format(day, 'EEE', { locale })}</span>
+                        <span className="text-lg font-semibold">{format(day, 'd')}</span>
+                        {/* Dots */}
+                        <div className="flex gap-0.5 mt-1">
+                          {hasHosting && <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-emerald-600'}`} />}
+                          {hasInvited && <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-amber-300' : 'bg-amber-500'}`} />}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Add Event Button */}
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700" data-testid="add-event-btn-week">
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t('calendar.addEvent')} - {format(selectedDate, 'd. MMM', { locale })}
+                </Button>
+              </DialogTrigger>
+              <DialogContent data-testid="add-event-dialog-week">
+                <DialogHeader>
+                  <DialogTitle className="font-playfair">{t('calendar.addEvent')}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 pt-4">
+                  <div>
+                    <Label>{t('calendar.guestName')}</Label>
+                    <Input
+                      value={newEvent.name}
+                      onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+                      placeholder="z.B. Familie Yilmaz"
+                    />
+                  </div>
+                  <div>
+                    <Label>{t('calendar.eventType')}</Label>
+                    <Select value={newEvent.type} onValueChange={(value) => setNewEvent({ ...newEvent, type: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="hosting">
+                          <div className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                            {t('calendar.hosting')}
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="invited">
+                          <div className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-full bg-amber-500" />
+                            {t('calendar.invited')}
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>{t('calendar.location')}</Label>
+                    <Input
+                      value={newEvent.location}
+                      onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                      placeholder={t('calendar.location')}
+                    />
+                  </div>
+                  <div>
+                    <Label>{t('calendar.notes')}</Label>
+                    <Textarea
+                      value={newEvent.notes}
+                      onChange={(e) => setNewEvent({ ...newEvent, notes: e.target.value })}
+                      placeholder={t('calendar.notes')}
+                    />
+                  </div>
+                  <Button onClick={handleAddEvent} className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    {t('calendar.save')}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Vertical Agenda List */}
+            <div className="space-y-2">
+              {weekEvents.length === 0 ? (
+                <Card className="border-gray-200">
+                  <CardContent className="py-8">
+                    <p className="text-gray-500 text-center text-sm">{t('calendar.noEvents')}</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                weekEvents.map((event) => (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-3 rounded-xl border-l-4 bg-white shadow-sm ${
+                      event.type === 'hosting'
+                        ? 'border-emerald-600'
+                        : 'border-amber-500'
+                    }`}
+                    data-testid={`week-event-${event.id}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-shrink-0 text-center min-w-[50px]">
+                        <div className="text-xs text-gray-500">{format(event.dayDate, 'EEE', { locale })}</div>
+                        <div className="text-lg font-semibold text-gray-900">{format(event.dayDate, 'd')}</div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <Badge className={`text-xs ${event.type === 'hosting' ? 'bg-emerald-600' : 'bg-amber-500'} text-white`}>
+                            {event.type === 'hosting' ? t('calendar.hosting') : t('calendar.invited')}
+                          </Badge>
+                        </div>
+                        <h4 className="font-medium text-gray-900 mt-1 truncate">{event.name}</h4>
+                        {event.location && (
+                          <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3" />
+                            {event.location}
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => openEditDialog(event)}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+                      >
+                        <Edit2 className="w-4 h-4 text-gray-400" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -499,16 +556,23 @@ const CalendarPage = () => {
               </div>
               <div>
                 <Label>{t('calendar.eventType')}</Label>
-                <Select
-                  value={editingEvent.type}
-                  onValueChange={(value) => setEditingEvent({ ...editingEvent, type: value })}
-                >
+                <Select value={editingEvent.type} onValueChange={(value) => setEditingEvent({ ...editingEvent, type: value })}>
                   <SelectTrigger data-testid="edit-event-type-select">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hosting">{t('calendar.hosting')}</SelectItem>
-                    <SelectItem value="invited">{t('calendar.invited')}</SelectItem>
+                    <SelectItem value="hosting">
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                        {t('calendar.hosting')}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="invited">
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-amber-500" />
+                        {t('calendar.invited')}
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>

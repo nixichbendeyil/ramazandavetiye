@@ -30,6 +30,7 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - **State Management**: React Context + localStorage
 - **API**: Aladhan Prayer Times API
 - **i18n**: react-i18next (DE/TR)
+- **PWA**: Service Worker + Web App Manifest (installierbar)
 - **No Backend Authentication** - alle Daten lokal
 
 ## What's Been Implemented (February 2026)
@@ -78,6 +79,7 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - [x] Rezepte-Favoriten
 - [x] Zweisprachigkeit
 - [x] Stadtauswahl
+- [x] PWA-Unterstützung (installierbar auf Handy)
 
 ## P1 Features (Backlog)
 - [ ] Menüplaner direkt mit Terminen verknüpfen
@@ -90,6 +92,18 @@ Ramadan/Fastenmonat-Kalender App für die Verwaltung von Einladungen und Besuche
 - [ ] Sahur-Wecker
 - [ ] Teilen von Einladungen per Link
 - [ ] Cloud-Synchronisation (optional)
+
+## PWA Installation (Februar 2026)
+Die App ist jetzt als Progressive Web App (PWA) verfügbar:
+- **Android**: Chrome öffnen → "Zum Startbildschirm hinzufügen"
+- **iOS**: Safari öffnen → Teilen-Button → "Zum Home-Bildschirm"
+- **Desktop**: Browser-Adressleiste → Installieren-Symbol
+
+### PWA-Features:
+- Eigenes App-Icon (Mondsichel + Kalender)
+- Standalone-Modus (ohne Browser-Leiste)
+- Offline-Unterstützung (Cache)
+- Schnellstart vom Homescreen
 
 ## Next Action Items
 1. Menüplaner mit Kalender-Events verknüpfen

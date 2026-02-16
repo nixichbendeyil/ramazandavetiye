@@ -736,20 +736,12 @@ const CalendarPage = () => {
                   {t('calendar.addEvent')} - {format(selectedDate, 'd. MMM', { locale })}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="rounded-2xl">
+              <DialogContent className="rounded-2xl max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="font-playfair text-xl">{t('calendar.addEvent')}</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 pt-4">
-                  <div>
-                    <Label className="text-stone-600">{t('calendar.guestName')}</Label>
-                    <Input
-                      value={newEvent.name}
-                      onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-                      placeholder="z.B. Familie Yilmaz"
-                      className="mt-1.5 rounded-xl"
-                    />
-                  </div>
+                <div className="space-y-4 pt-4 pb-4">
+                  {/* Event Type - First so user can choose */}
                   <div>
                     <Label className="text-stone-600">{t('calendar.eventType')}</Label>
                     <Select value={newEvent.type} onValueChange={(value) => setNewEvent({ ...newEvent, type: value })}>
@@ -772,6 +764,62 @@ const CalendarPage = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* For INVITED: Show "Name" (who invited you) */}
+                  {newEvent.type === 'invited' && (
+                    <div>
+                      <Label className="text-stone-600">{language === 'de' ? 'Eingeladen von' : 'Davet eden'}</Label>
+                      <Input
+                        value={newEvent.name}
+                        onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+                        placeholder={language === 'de' ? 'z.B. Familie Yilmaz' : 'orn. Yilmaz Ailesi'}
+                        className="mt-1.5 rounded-xl"
+                      />
+                    </div>
+                  )}
+
+                  {/* For HOSTING: Show Guests section at top */}
+                  {newEvent.type === 'hosting' && (
+                    <div>
+                      <Label className="text-stone-600">{t('calendar.guests')}</Label>
+                      <div className="mt-1.5 flex gap-2">
+                        <Input
+                          value={newGuestName}
+                          onChange={(e) => setNewGuestName(e.target.value)}
+                          placeholder={t('calendar.guestNamePlaceholder')}
+                          className="rounded-xl flex-1"
+                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
+                        />
+                        <Button
+                          type="button"
+                          onClick={addGuestToNewEvent}
+                          size="icon"
+                          className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      {newEvent.guests && newEvent.guests.length > 0 ? (
+                        <div className="mt-3 space-y-2">
+                          {newEvent.guests.map((guest) => (
+                            <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                              <span className="text-sm text-stone-700">{guest.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeGuestFromNewEvent(guest.id)}
+                                className="text-stone-400 hover:text-red-500 transition-colors"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-stone-400 mt-2">{t('calendar.noGuests')}</p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label className="text-stone-600">{t('calendar.time')}</Label>
@@ -801,6 +849,49 @@ const CalendarPage = () => {
                       className="mt-1.5 rounded-xl"
                     />
                   </div>
+
+                  {/* For INVITED: Show "Wir gehen mit" (companions) */}
+                  {newEvent.type === 'invited' && (
+                    <div>
+                      <Label className="text-stone-600">{t('calendar.companions')}</Label>
+                      <div className="mt-1.5 flex gap-2">
+                        <Input
+                          value={newGuestName}
+                          onChange={(e) => setNewGuestName(e.target.value)}
+                          placeholder={t('calendar.companionPlaceholder')}
+                          className="rounded-xl flex-1"
+                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addGuestToNewEvent())}
+                        />
+                        <Button
+                          type="button"
+                          onClick={addGuestToNewEvent}
+                          size="icon"
+                          className="bg-[#0F4C5C] hover:bg-[#0D3D4A] rounded-xl h-10 w-10"
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      {newEvent.guests && newEvent.guests.length > 0 ? (
+                        <div className="mt-3 space-y-2">
+                          {newEvent.guests.map((guest) => (
+                            <div key={guest.id} className="flex items-center justify-between bg-stone-50 px-3 py-2 rounded-lg">
+                              <span className="text-sm text-stone-700">{guest.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeGuestFromNewEvent(guest.id)}
+                                className="text-stone-400 hover:text-red-500 transition-colors"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-stone-400 mt-2">{t('calendar.noCompanions')}</p>
+                      )}
+                    </div>
+                  )}
+
                   <div>
                     <Label className="text-stone-600">{t('calendar.notes')}</Label>
                     <Textarea

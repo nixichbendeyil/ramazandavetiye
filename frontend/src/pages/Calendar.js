@@ -81,7 +81,8 @@ const CalendarPage = () => {
       ...newEvent,
       date: selectedDate.toISOString().split('T')[0]
     });
-    setNewEvent({ name: '', type: 'hosting', location: '', address: '', time: '18:00', notes: '', menu: [] });
+    setNewEvent({ name: '', type: 'hosting', location: '', address: '', time: '18:00', notes: '', menu: [], guests: [] });
+    setNewGuestName('');
     setIsAddDialogOpen(false);
   };
 

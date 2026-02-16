@@ -238,7 +238,7 @@ const ShoppingList = () => {
                           <Checkbox
                             checked={item.completed}
                             onCheckedChange={() => toggleShoppingItem(item.id)}
-                            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                            className="data-[state=checked]:bg-[#0F4C5C] data-[state=checked]:border-[#0F4C5C]"
                             data-testid={`checkbox-${item.id}`}
                           />
                           <div className="flex-1 min-w-0">
